@@ -1,14 +1,13 @@
 ﻿<?
-	echo "----------------------" . "<br>";
-	echo "account_sign_up.php" . "<br>";
-	echo "----------------------" . "<br>";
-
 	session_start();
 
 	include_once "include/commons.php";
 
-	//$TAG = "account_sign_up.php";
-	echo "----------------------" . "<br>";
+	\commons\log\_echo( "----------------------" );
+	\commons\log\_echo( "account_sign_up.php" );
+	\commons\log\_echo( "----------------------" );
+
+	\commons\log\_echo( "----------------------" );
 
 
 
@@ -18,7 +17,8 @@
 
 
 
-	echo "<hr>";
+	//echo "<hr>";
+	\commons\log\_echo( "<hr>" );
 ?>
 
 

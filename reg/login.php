@@ -1,14 +1,13 @@
 ﻿<?
-	echo "----------------------" . "<br>";
-	echo "login.php" . "<br>";
-	echo "----------------------" . "<br>";
-
 	session_start();
 
 	include_once "include/commons.php";
 
-	//$TAG = "login.php";
-	echo "----------------------" . "<br>";
+	\commons\log\_echo( "----------------------" );
+	\commons\log\_echo( "login.php" );
+	\commons\log\_echo( "----------------------" );
+	
+	\commons\log\_echo( "----------------------" );
 
 
 
@@ -30,7 +29,8 @@
 
 
 
-	echo "<hr>";
+	//echo "<hr>";
+	\commons\log\_echo( "<hr>" );
 ?>
 
 

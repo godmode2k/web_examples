@@ -1,20 +1,30 @@
 ﻿<?
-	echo "----------------------" . "<br>";
-	echo "logout.php" . "<br>";
-	echo "----------------------" . "<br>";
-
 	session_start();
+
+	include_once "include/commons.php";
+
+	\commons\log\_echo( "----------------------" );
+	\commons\log\_echo( "logout.php" );
+	\commons\log\_echo( "----------------------" );
 
 	$_SESSION['logout'] = "y";
 
-	include_once "include/commons.php";
 	include_once "include/auth.php";
 
-	//$TAG = "logout.php";
-	echo "----------------------" . "<br>";
+	\commons\log\_echo( "----------------------" );
 
 
 
-	session_clear( PAGE__HOME );
+	///*
+	// For Mobile
+	if ( \commons\util\non_browser_agent() ) {
+		session_clear( null, false );
+		\commons\response\json_ro( JSON_RESULT_SUCCESS );
+		exit;
+	}
+	//*/
+
+
+	session_clear( PAGE__HOME, true );
 
 ?>

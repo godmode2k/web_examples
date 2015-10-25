@@ -1,15 +1,15 @@
 ﻿<?
-	echo "----------------------" . "<br>";
-	echo "reserv.php" . "<br>";
-	echo "----------------------" . "<br>";
-
 	session_start();
 
 	include_once "include/commons.php";
+
+	\commons\log\_echo( "----------------------" );
+	\commons\log\_echo( "reserv.php" );
+	\commons\log\_echo( "----------------------" );
+
 	include_once "include/auth.php";
 
-	//$TAG = "reserv.php";
-	echo "----------------------" . "<br>";
+	\commons\log\_echo( "----------------------" );
 
 
 
@@ -38,7 +38,8 @@
 
 
 
-	echo "<hr>";
+	//echo "<hr>";
+	\commons\log\_echo( "<hr>" );
 ?>
 
 

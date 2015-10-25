@@ -1,9 +1,11 @@
 ﻿<?
-	echo "----------------------" . "<br>";
-	echo "account_confirm.php" . "<br>";
-	echo "----------------------" . "<br>";
-
 	session_start();
+
+	include_once "include/commons.php";
+
+	\commons\log\_echo( "----------------------" );
+	\commons\log\_echo( "account_confirm.php" );
+	\commons\log\_echo( "----------------------" );
 
 	if ( isset($_SESSION['reg_confirm_account_done']) ) {
 		unset( $_SESSION['reg_confirm_account'] );
@@ -12,16 +14,14 @@
 	else {
 		$_SESSION['reg_confirm_account'] = true;
 
-		include_once "include/commons.php";
 		include_once "include/auth.php";
 	}
 
-	//$TAG = "account_confirm.php";
-	echo "----------------------" . "<br>";
+	\commons\log\_echo( "----------------------" );
 
 
 
-
+	\commons\log\_echo( "<hr>" );
 ?>
 
 

@@ -1,22 +1,22 @@
 ﻿<?
-	echo "----------------------" . "<br>";
-	echo "account_remove_commit.php" . "<br>";
-	echo "----------------------" . "<br>";
-
 	session_start();
+
+	include_once "include/commons.php";
+
+	\commons\log\_echo( "----------------------" );
+	\commons\log\_echo( "account_remove_commit.php" );
+	\commons\log\_echo( "----------------------" );
 
 	$_SESSION['reg_remove_account'] = true;
 
-	include_once "include/commons.php";
 	include_once "include/auth.php";
 
-	//$TAG = "account_remove_commit.php";
-	echo "----------------------" . "<br>";
+	\commons\log\_echo( "----------------------" );
 
 
 
-
-	echo "<hr>";
+	//echo "<hr>";
+	\commons\log\_echo( "<hr>" );
 ?>
 
 

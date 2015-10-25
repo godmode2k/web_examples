@@ -6,7 +6,7 @@ Author:		Ho-Jung Kim (godmode2k@hotmail.com)
 Date:		Since November 16, 2013
 Filename:	commons.php
 
-Last modified: Sep 24, 2015
+Last modified: Oct 23, 2015
 License:
 
 *
@@ -32,7 +32,7 @@ Note:
 
 
 // DEBUG
-define( FLAG_DEBUG, true );
+define( FLAG_DEBUG, false );
 
 
 
@@ -97,6 +97,25 @@ define( TAG_ACCOUNT_REMOVE_COMMIT, "account_remove_commit.php" );
 define( TAG_RESERV, "reserv.php" );
 define( TAG_RESERV_REGISTER_MODIFY, "reserv_register_modify.php" );
 define( TAG_RESERV_REGISTER_COMMIT, "reserv_register_commit.php" );
+
+
+//! For Mobile
+// -----------------------------------------------
+define( JSON_RESULT_SUCCESS, 1 );
+define( JSON_RESULT_FAIL, 0 );
+define( JSON_RESULT_UNKNOWN, "unknown" );
+define( JSON_RESULT_TRUE, 1 );
+define( JSON_RESULT_FALSE, 0 );
+define( JSON_RESULT, "result" );
+define( JSON_RESULT_ERROR_LOGIN_ID, "id" );
+define( JSON_RESULT_ERROR_LOGIN_PASSWD, "passwd" );
+define( JSON_LOGIN, "login" );
+define( JSON_LOGIN_LOCKED, "login_locked" );
+define( JSON_LOGIN_CONFIRM_URL, "login_confirm_url" );
+define( JSON_LOGIN_ALREADY, "login_already" );
+define( JSON_LOGIN_USER_NAME, "user_name" );
+define( JSON_LOGIN_USER_EMAIL, "user_email" );
+define( JSON_LOGIN_USER_PHONE, "user_phone" );
 
 
 //!

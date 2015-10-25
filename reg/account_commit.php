@@ -1,21 +1,21 @@
 ﻿<?
-	echo "----------------------" . "<br>";
-	echo "account_commit.php" . "<br>";
-	echo "----------------------" . "<br>";
-
 	session_start();
+
+	include_once "include/commons.php";
+
+	\commons\log\_echo( "----------------------" );
+	\commons\log\_echo( "account_commit.php" );
+	\commons\log\_echo( "----------------------" );
 
 	$_SESSION['reg_new_account'] = true;
 
-	include_once "include/commons.php";
 	include_once "include/auth.php";
 
-	//$TAG = "account_commit.php";
-	echo "----------------------" . "<br>";
+	\commons\log\_echo( "----------------------" );
 
 
 
-
+	\commons\log\_echo( "<hr>" );
 ?>
 
 

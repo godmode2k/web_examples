@@ -1,15 +1,23 @@
 ﻿<?
-	echo "----------------------" . "<br>";
-	echo "login_chk.php" . "<br>";
-	echo "----------------------" . "<br>";
-
 	session_start();
 
 	include_once "include/commons.php";
+
+	\commons\log\_echo( "----------------------" );
+	\commons\log\_echo( "login_chk.php" );
+	\commons\log\_echo( "----------------------" );
+
 	include_once "include/auth.php";
 
-	//$TAG = "login_chk.php";
-	echo "----------------------" . "<br>";
+	\commons\log\_echo( "----------------------" );
+
+
+	///*
+	// For Mobile
+	if ( \commons\util\non_browser_agent() ) {
+		exit;
+	}
+	//*/
 
 ?>
 

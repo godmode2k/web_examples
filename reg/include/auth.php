@@ -6,7 +6,7 @@ Author:		Ho-Jung Kim (godmode2k@hotmail.com)
 Date:		Since November 16, 2013
 Filename:	auth.php
 
-Last modified: Sep 24, 2015
+Last modified: Oct 24, 2015
 License:
 
 *
@@ -41,6 +41,7 @@ require_once "mysql.php";
 // namespace test
 //\commons\log\logd( "AUTH", "first msg..." );
 //\commons\log\logd2( "AUTH", "GLOBAL", "first msg..." );
+//\commons\util\non_browser_agent();
 
 
 global $db;
@@ -73,7 +74,7 @@ function set_query_type_post($val) {
 	}
 }
 
-function session_clear($location) {
+function session_clear($location, $_exit) {
 	unset( $_POST );
 	$_POST = array();
 
@@ -103,7 +104,9 @@ function session_clear($location) {
 		header( "Location: " . $location );
 	}
 
-	exit;
+	if ( $_exit ) {
+		exit;
+	}
 }
 
 function link_page($location) {
@@ -199,7 +202,7 @@ function link_page($location) {
 				\commons\log\logd( TAG_AUTH, "Account created [TRUE]" );
 
 				//$_SESSION['reg_new_account'] = "n";
-				//session_clear( "login.php" );
+				//session_clear( "login.php", true );
 			}
 		}
 
@@ -227,7 +230,7 @@ function link_page($location) {
 				\commons\log\logd( TAG_AUTH, "Removed [TRUE]" );
 			}
 
-			session_clear( PAGE__LOGIN );
+			session_clear( PAGE__LOGIN, true );
 			exit;
 		}
 
@@ -320,7 +323,21 @@ function link_page($location) {
 				case ERR__LOGIN__ID_PASSWD:
 					{
 						\commons\log\logd( TAG_AUTH, "auth: result: wrong id/password or locked" . $m_reg_login );
-						header( 'Location: login.php' );
+						//header( 'Location: login.php' );
+
+
+						///*
+						{
+							// For Mobile
+							if ( \commons\util\non_browser_agent() ) {
+								\commons\response\json_ro( JSON_RESULT_FAIL );
+							}
+							else {
+								header( 'Location: login.php' );
+							}
+						}
+						//*/
+
 						exit;
 					} break;
 				case ERR__LOGIN__LOCKED:
@@ -331,12 +348,47 @@ function link_page($location) {
 						$_GET['auth'] = $auth;
 						\commons\log\logd( TAG_AUTH, "auth: result: auth = " . $auth );
 						header( "Location: account_confirm_url.php?id=" . $m_reg_login_id . "&auth=" . $auth );
+
+
+						/*
+						{
+							// For Mobile
+							if ( \commons\util\non_browser_agent() ) {
+								\commons\response\json_rkv( JSON_RESULT_FAIL, JSON_LOGIN_LOCKED, JSON_RESULT_TRUE );
+								//JSON_LOGIN_CONFIRM_URL
+								$json_data = Array();
+								if ( is_array($json_data) ) {
+									$confirm_url = "Location: account_confirm_url.php?id="
+													. $m_reg_login_id . "&auth=" . $auth;
+									$json_data[JSON_RESULT] = JSON_RESULT_SUCCESS;
+									$json_data[JSON_LOGIN_LOCKED] = JSON_RESULT_SUCCESS;
+									$json_data[JSON_LOGIN_CONFIRM_URL] = $confirm_url;
+									\commons\response\json_array( $json_data );
+								}
+							}
+						}
+						*/
+
 						exit;
 					} break;
 				default:
 					{
 						\commons\log\logd( TAG_AUTH, "auth: result: unknown error" );
-						header( 'Location: login.php' );
+						//header( 'Location: login.php' );
+
+
+						///*
+						{
+							// For Mobile
+							if ( \commons\util\non_browser_agent() ) {
+								\commons\response\json_ro( JSON_RESULT_UNKNOWN );
+							}
+							else {
+								header( 'Location: login.php' );
+							}
+						}
+						//*/
+
 						exit;
 					} break;
 			}
@@ -371,6 +423,25 @@ function link_page($location) {
 				$m_reg_user_last_reg_datetime_from = $_SESSION['user_last_reg_datetime_from'];
 				$m_reg_user_last_reg_date_to = $_SESSION['user_last_reg_date_to'];
 				$m_reg_user_last_reg_datetime_to = $_SESSION['user_last_reg_datetime_to'];
+
+
+				///*
+				// For Mobile
+				if ( \commons\util\non_browser_agent() ) {
+					//\commons\response\json_ro( JSON_RESULT_SUCCESS );
+
+					$json_data = Array();
+					if ( is_array($json_data) ) {
+						$json_data[JSON_RESULT] = JSON_RESULT_SUCCESS;
+						$json_data[JSON_LOGIN] = JSON_RESULT_SUCCESS;
+						$json_data[JSON_LOGIN_ALREADY] = JSON_RESULT_SUCCESS;
+						$json_data[JSON_LOGIN_USER_NAME] = $_SESSION['user_name'];
+						$json_data[JSON_LOGIN_USER_EMAIL] = $_SESSION['user_email'];
+						$json_data[JSON_LOGIN_USER_PHONE] = $_SESSION['user_phone'];
+						\commons\response\json_array( $json_data );
+					}
+				}
+				//*/
 			}
 		}
 		else {
@@ -383,6 +454,30 @@ function link_page($location) {
 				//header( 'Location: login.php' );
 				//exit;
 			}
+
+
+			///*
+			// For Mobile
+			if ( \commons\util\non_browser_agent() ) {
+				//\commons\response\json_ro( JSON_RESULT_SUCCESS );
+
+				$json_data = Array();
+				if ( is_array($json_data) ) {
+					$json_data[JSON_RESULT] = JSON_RESULT_SUCCESS;
+					$json_data[JSON_LOGIN] = JSON_RESULT_SUCCESS;
+					$json_data[JSON_LOGIN_ALREADY] = JSON_RESULT_SUCCESS;
+					$json_data[JSON_LOGIN_USER_NAME] = $_SESSION['user_name'];
+					$json_data[JSON_LOGIN_USER_EMAIL] = $_SESSION['user_email'];
+					$json_data[JSON_LOGIN_USER_PHONE] = $_SESSION['user_phone'];
+					\commons\response\json_array( $json_data );
+				}
+			}
+			//*/
+
+
+
+
+
 
 		/*
 			//$m_reg_user_uid = null;
