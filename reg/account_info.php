@@ -1,15 +1,15 @@
 ﻿<?
-	echo "----------------------" . "<br>";
-	echo "account_info.php" . "<br>";
-	echo "----------------------" . "<br>";
-
 	session_start();
 
 	include_once "include/commons.php";
+
+	\commons\log\_echo( "----------------------" );
+	\commons\log\_echo( "account_info.php" );
+	\commons\log\_echo( "----------------------" );
+
 	include_once "include/auth.php";
 
-	//$TAG = "account_info.php";
-	echo "----------------------" . "<br>";
+	\commons\log\_echo( "----------------------" );
 
 
 
@@ -25,7 +25,8 @@
 
 
 
-	echo "<hr>";
+	//echo "<hr>";
+	\commons\log\_echo( "<hr>" );
 ?>
 
 
@@ -109,14 +110,14 @@
 		<tr>
 			<td> Current password </td>
 			<td> <input type=\"password\" maxlength=\"8\" name=\"reg_login_passwd_old\"
-							onchange=\"onVerifyPasswd('reg_login_passwd_old', 'reg_login_passwd_new',
+							onchange=\"onVerifyPasswdLength('reg_login_passwd_old', 'reg_login_passwd_new',
 								'id_reg_login_passwd_verify', 8)\"> </td>
 			<td> (8 length) </td>
 		</tr>
 		<tr>
 			<td> New password </td>
 			<td> <input type=\"password\" maxlength=\"8\" name=\"reg_login_passwd_new\"
-							onchange=\"onVerifyPasswd('reg_login_passwd_old', 'reg_login_passwd_new',
+							onchange=\"onVerifyPasswdLength('reg_login_passwd_old', 'reg_login_passwd_new',
 								'id_reg_login_passwd_verify', 8)\"> </td>
 			<td> (8 length) </td>
 		</tr>

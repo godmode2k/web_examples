@@ -52,6 +52,25 @@ function onVerifyPasswd(obj_name, obj_name_verify, obj_id_result, maxlen) {
 	}
 }
 
+function onVerifyPasswdLength(obj_name, obj_name_verify, obj_id_result, maxlen) {
+	var passwd = document.getElementsByName(obj_name).item( 0 );
+	var passwd_verify = document.getElementsByName(obj_name_verify).item( 0 );
+	var verifying_result = document.getElementById(obj_id_result);
+	var str = "";
+
+	if ( (passwd.value != "") && (passwd_verify.value != "") ) {
+		if ( (passwd.value.length < maxlen) || (passwd_verify.value.length < maxlen) ) {
+			if ( str == "" )
+				str = maxlen + " digits";
+
+			verifying_result.innerHTML = str;
+		}
+		else {
+			verifying_result.innerHTML = "";
+		}
+	}
+}
+
 /*
  * obj = this
 function onVerifyEmail(obj) {
@@ -96,12 +115,20 @@ function onVerifyNumber(obj_name, maxlen) {
 	}
 }
 
-function onVerifyLength(obj_name, maxlen) {
-	var str = document.getElementsByName(obj_name).item( 0 );
+function onVerifyLength(obj_name, obj_id_result, maxlen) {
+	var obj = document.getElementsByName(obj_name).item( 0 );
+	var verifying_result = document.getElementById(obj_id_result);
+	var str = maxlen + " digits";
 
-	//alert( "str = " + str.value + ", len = " + str.value.length + ", maxlen = " + maxlen );
-	if ( str.value.length < maxlen ) {
-		alert( maxlen + " digits" );
+	//alert( "obj = " + obj.value + ", len = " + obj.value.length + ", maxlen = " + maxlen );
+	if ( obj.value.length < maxlen ) {
+		if ( verifying_result == null )
+			alert( str );
+		else
+			verifying_result.innerHTML = str;
+	}
+	else {
+		verifying_result.innerHTML = "";
 	}
 }
 
