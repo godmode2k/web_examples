@@ -5,8 +5,8 @@ Web Examples
 Summary
 ----------
 > The sources show you how to make a simple Web page for <br>
-> manage the account(sign-in/up) and schedule.
-> And handle JSON response in PHP/Android (Currently login/logout only).
+> manage the account(sign-in/up) and schedule. <br>
+> And handle JSON response in PHP/Android (Currently login/logout only). <br>
 > In Android, you can see how to keep PHP session.
 
 
