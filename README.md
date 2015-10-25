@@ -6,6 +6,8 @@ Summary
 ----------
 > The sources show you how to make a simple Web page for <br>
 > manage the account(sign-in/up) and schedule.
+> And handle JSON response in PHP/Android (Currently login/logout only).
+> In Android, you can see how to keep PHP session.
 
 
 Environment
@@ -43,18 +45,33 @@ Files
 	  - reserv_register_modify.php
 	  - reserv_register_commit.php
 	  -
-	  ./include
+	  /include
 	    - commons.php
 	    - namespaces.php
 	    - auth.php                    // Authentication and most actions
 	    - mysql.php                   // Database (MySQL) actions
-	    -
-	  ./js
+	  -
+	  /js
 	    - util.js                     // some JavaScript for 'form' tag action
-	  ./db
+	  -
+	  /db
 	    - db.sql                      // Database schema
+	  -
+	  /Mobile {
+	    /Android
+	      - http_test_activity.xml    // HTTP Test Layout
+	      - HttpTestActivity.java     // HTTP Test Activity
+	  }
 	}
 	  
+
+Note
+----------
+>
+	For Mobile App,
+	You have to set <User-Agent> to "mobile_app" for JSON response.
+	Currently login/logout only.
+
 
 
 Screenshots
