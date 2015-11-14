@@ -7,10 +7,14 @@
 	\commons\log\_echo( "account_info.php" );
 	\commons\log\_echo( "----------------------" );
 
+	$_SESSION['reg_get_account_info'] = true;
+
 	include_once "include/auth.php";
 
 	\commons\log\_echo( "----------------------" );
 
+
+	unset( $_SESSION['reg_get_account_info'] );
 
 
 	//\commons\log\logd( TAG_ACCOUNT_INFO, "account_info: login = " . $m_reg_login );
@@ -23,6 +27,41 @@
 	$m_reg_user_email = $_SESSION['user_email'];
 	$m_reg_user_phone = $_SESSION['user_phone'];
 
+
+	///*
+	// For Mobile
+	if ( \commons\util\non_browser_agent() ) {
+		$result = get_account_info( $db, $m_reg_user_id );
+
+		if ( empty($result) ) {
+			//echo( "<b>NO DATA found...</b> <br> </body> </html>" );
+			\commons\response\json_ro( JSON_RESULT_FAIL );
+			exit;
+		}
+
+		$account_info_id = $result[0][1];
+		$account_info_name = $result[0][2];
+		//$account_info_passwd = $result[0][3];
+		$account_info_email = $result[0][4];
+		$account_info_phone = $result[0][5];
+		
+		//$account_info_phone_1 = substr( $account_info_phone, 0, 3 );
+		//$account_info_phone_2 = substr( $account_info_phone, 4, 4 );
+		//$account_info_phone_3 = substr( $account_info_phone, 9 );
+
+		$json_data = Array();
+		if ( is_array($json_data) ) {
+			$json_data[JSON_RESULT] = JSON_RESULT_SUCCESS;
+			$json_data[JSON_ACCOUNT_INFO_ID] = $account_info_id;
+			$json_data[JSON_ACCOUNT_INFO_NAME] = $account_info_name;
+			$json_data[JSON_ACCOUNT_INFO_EMAIL] = $account_info_email;
+			$json_data[JSON_ACCOUNT_INFO_PHONE] = $account_info_phone;
+			\commons\response\json_array( $json_data );
+		}
+
+		exit;
+	}
+	//*/
 
 
 	//echo "<hr>";
@@ -47,9 +86,9 @@
 <body>
 	<div id="menu_top" style="background-color: #FFD700; height: 40px; width: 90%; float: left;" align="center">
 		<table>
-			<td> <b><a style="text-decoration: none" href="reserv.php">예약</a></b> </td>
+			<td> <b><a style="text-decoration: none" href="reserv.php">Reserve</a></b> </td>
 			<td> <b>|</b> </td>
-			<td> <b><a style="text-decoration: none" href="reserv_register_modify.php">관리</a></b> </td>
+			<td> <b><a style="text-decoration: none" href="reserv_register_modify.php">Manage</a></b> </td>
 		</table>
 	</div>
 	<div id="menu_top_login" style="background-color: #FFD700; height: 40px; width: 10%; float: left;" align="right">
@@ -63,10 +102,10 @@
 
 					if ( chk_login_already(false) ) {
 						//echo '<b><a style="text-decoration: none" href="JavaScript:reg_logout(this)">로그아웃</a></b>';
-						echo '<b><a style="text-decoration: none" href="logout.php">로그아웃</a></b>';
+						echo '<b><a style="text-decoration: none" href="logout.php">logout</a></b>';
 					}
 					else {
-						echo '<b><a style="text-decoration: none" href="login.php">로그인</a></b>';
+						echo '<b><a style="text-decoration: none" href="login.php">login</a></b>';
 					}
 				?>
 			</td>

@@ -6,7 +6,7 @@ Author:		Ho-Jung Kim (godmode2k@hotmail.com)
 Date:		Since November 16, 2013
 Filename:	commons.php
 
-Last modified: Oct 23, 2015
+Last modified: Nov 13, 2015
 License:
 
 *
@@ -104,6 +104,7 @@ define( TAG_RESERV_REGISTER_COMMIT, "reserv_register_commit.php" );
 define( JSON_RESULT_SUCCESS, 1 );
 define( JSON_RESULT_FAIL, 0 );
 define( JSON_RESULT_UNKNOWN, "unknown" );
+define( JSON_RESULT_NUMBER, "number" );
 define( JSON_RESULT_TRUE, 1 );
 define( JSON_RESULT_FALSE, 0 );
 define( JSON_RESULT, "result" );
@@ -116,6 +117,10 @@ define( JSON_LOGIN_ALREADY, "login_already" );
 define( JSON_LOGIN_USER_NAME, "user_name" );
 define( JSON_LOGIN_USER_EMAIL, "user_email" );
 define( JSON_LOGIN_USER_PHONE, "user_phone" );
+define( JSON_ACCOUNT_INFO_ID, "account_info_id" );
+define( JSON_ACCOUNT_INFO_NAME, "account_info_name" );
+define( JSON_ACCOUNT_INFO_EMAIL, "account_info_email" );
+define( JSON_ACCOUNT_INFO_PHONE, "account_info_phone" );	// "xxx-xxxx-xxxx"
 
 
 //!

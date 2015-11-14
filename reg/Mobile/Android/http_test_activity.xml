@@ -17,30 +17,47 @@
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+	<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/HorizontalScrollView_control"
+		android:background="#000000"
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:gravity="center|center_vertical|left"
-		android:background="#00000000"
+		android:fadeScrollbars="true"
+		android:scrollbars="horizontal"
 	>
-		<Button android:id="@+id/Button_login"
-			android:layout_width="wrap_content"
+		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:text="login"
-		/>
-		<Button android:id="@+id/Button_logout"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="logout"
-		/>
+			android:gravity="center|center_vertical|left"
+			android:background="#00000000"
+		>
+			<Button android:id="@+id/Button_login"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="login"
+			/>
+			<Button android:id="@+id/Button_logout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="logout"
+			/>
 
-		<Button android:id="@+id/Button_test"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="test"
-		/>
-	</LinearLayout>
+			<Button android:id="@+id/Button_test"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="test"
+			/>
+
+			<Button android:id="@+id/Button_account_info"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="account_info"
+			/>
+		</LinearLayout>
+	</HorizontalScrollView>
 
 	<!-- ipaddr:port -->
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -180,7 +197,7 @@
 		android:background="#00000000"
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
-		android:layout_height="300dp"
+		android:layout_height="fill_parent"
 		android:hapticFeedbackEnabled="true"
 		android:fadeScrollbars="true"
 	>
@@ -189,10 +206,12 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 		>
+			<!-- result -->
 			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginBottom="40dp"
 			>
 				<ImageView
 					android:visibility="visible"
@@ -235,7 +254,482 @@
 						android:gravity="center|center_vertical|center_horizontal"
 					/>
 				</LinearLayout>
-			</LinearLayout>
+			</LinearLayout> <!-- result -->
+
+
+			<!-- account info -->
+			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:id="@+id/LinearLayout_account_info"
+				android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:gravity="left|center_vertical|center_horizontal"
+				android:background="#00000000"
+				android:visibility="gone"
+			>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="#A9A9A9"
+					android:text="=== account info ==="
+					android:textSize="16sp"
+					android:textStyle="bold"
+					android:singleLine="true"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:layout_gravity="left|center_vertical|center_horizontal"
+				/>
+
+				<!-- ID -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="ID: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<TextView
+						android:id="@+id/TextView_account_info_id"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+				</LinearLayout>
+
+				<!-- Current password -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="Current password: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<!--
+						android:password="true"
+						android:inputType="number"
+						android:maxLength="8"
+					-->
+					<EditText
+						android:id="@+id/EditText_account_info_passwd_current"
+						android:layout_width="150dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:maxLength="8"
+					/>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="(8 length)"
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+				</LinearLayout>
+
+				<!-- New password -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="New password: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<!--
+						android:password="true"
+						android:inputType="number"
+						android:maxLength="8"
+					-->
+					<EditText
+						android:id="@+id/EditText_account_info_passwd_new"
+						android:layout_width="150dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:maxLength="8"
+					/>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="(8 length)"
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+				</LinearLayout>
+
+				<!-- confirm New password -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="confirm New password: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<!--
+						android:password="true"
+						android:inputType="number"
+						android:maxLength="8"
+					-->
+					<EditText
+						android:id="@+id/EditText_account_info_passwd_new_confirm"
+						android:layout_width="150dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:maxLength="8"
+					/>
+				</LinearLayout>
+
+				<!-- Name -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="Name: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_account_info_name"
+						android:layout_width="50dp" 
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+					/>
+				</LinearLayout>
+
+				<!-- email -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="email: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_account_info_email"
+						android:layout_width="50dp" 
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+					/>
+				</LinearLayout>
+
+				<!-- confirm email -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="confirm email: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_account_info_email_confirm"
+						android:layout_width="50dp" 
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+					/>
+				</LinearLayout>
+
+				<!-- phone -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="Phone: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_account_info_phone"
+						android:layout_width="300dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:inputType="phone"
+						android:maxLength="13"
+					/>
+					<!--
+					<EditText
+						android:id="@+id/EditText_account_info_phone_1"
+						android:layout_width="100dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:inputType="number"
+						android:maxLength="4"
+					/>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="-"
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_account_info_phone_2"
+						android:layout_width="100dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:inputType="number"
+						android:maxLength="4"
+					/>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="-"
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_account_info_phone_3"
+						android:layout_width="100dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:inputType="number"
+						android:maxLength="4"
+					/>
+					-->
+				</LinearLayout>
+				<!--
+				<EditText
+					android:id="@+id/EditText_account_phone"
+					android:layout_width="100dp" 
+					android:layout_height="wrap_content"
+					android:gravity="center_vertical|left"
+					android:layout_gravity="left|center_vertical|center_horizontal"
+					android:singleLine="true"
+					android:textSize="16sp"
+					android:textColor="#A9A9A9"
+					android:text=""
+					android:inputType="phone"
+				/>
+				-->
+				<Button android:id="@+id/Button_account_info_done"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Done"
+				/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="#A9A9A9"
+					android:text="-----"
+					android:textSize="16sp"
+					android:textStyle="bold"
+					android:singleLine="true"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:layout_gravity="left|center_vertical|center_horizontal"
+				/>
+
+				<!-- Remove -->
+				<!-- Current password -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="Current password"
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_account_info_remove_passwd_current"
+						android:layout_width="150dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:maxLength="8"
+					/>
+				</LinearLayout>
+				<Button android:id="@+id/Button_account_info_remove"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Remove"
+				/>
+			</LinearLayout> <!-- account info -->
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

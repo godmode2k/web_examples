@@ -337,9 +337,9 @@
 <body>
 	<div id="menu_top" style="background-color: #FFD700; height: 40px; width: 90%; float: left;" align="center">
 		<table>
-			<td> <b><a style="text-decoration: none" href="reserv.php">예약</a></b> </td>
+			<td> <b><a style="text-decoration: none" href="reserv.php">Reserve</a></b> </td>
 			<td> <b>|</b> </td>
-			<td> <b><a style="text-decoration: none" href="reserv_register_modify.php">관리</a></b> </td>
+			<td> <b><a style="text-decoration: none" href="reserv_register_modify.php">Manage</a></b> </td>
 		</table>
 	</div>
 	<div id="menu_top_login" style="background-color: #FFD700; height: 40px; width: 10%; float: left;" align="right">
@@ -353,10 +353,10 @@
 
 					if ( chk_login_already(false) ) {
 						//echo '<b><a style="text-decoration: none" href="JavaScript:reg_logout(this)">로그아웃</a></b>';
-						echo '<b><a style="text-decoration: none" href="logout.php">로그아웃</a></b>';
+						echo '<b><a style="text-decoration: none" href="logout.php">logout</a></b>';
 					}
 					else {
-						echo '<b><a style="text-decoration: none" href="login.php">로그인</a></b>';
+						echo '<b><a style="text-decoration: none" href="login.php">login</a></b>';
 					}
 				?>
 			</td>

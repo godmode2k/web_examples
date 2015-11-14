@@ -6,7 +6,7 @@ Author:		Ho-Jung Kim (godmode2k@hotmail.com)
 Date:		Since November 16, 2013
 Filename:	auth.php
 
-Last modified: Oct 24, 2015
+Last modified: Nov 13, 2015
 License:
 
 *
@@ -224,10 +224,27 @@ function link_page($location) {
 
 				if ( !$result ) {
 					\commons\log\logd( TAG_AUTH, "Removed [FALSE]" );
+
+					///*
+					// For Mobile
+					if ( \commons\util\non_browser_agent() ) {
+						\commons\response\json_ro( JSON_RESULT_FAIL );
+					}
+					//*/
+
 					exit;
 				}
 
 				\commons\log\logd( TAG_AUTH, "Removed [TRUE]" );
+
+				///*
+				// For Mobile
+				if ( \commons\util\non_browser_agent() ) {
+					\commons\response\json_ro( JSON_RESULT_SUCCESS );
+					session_clear( null, false );
+					exit;
+				}
+				//*/
 			}
 
 			session_clear( PAGE__LOGIN, true );
@@ -253,6 +270,13 @@ function link_page($location) {
 				$phone_num_2 = $_POST['reg_login_phone_num_2'];
 				$phone_num_3 = $_POST['reg_login_phone_num_3'];
 				$phone_num = $phone_num_1 . "-" . $phone_num_2 . "-" . $phone_num_3;
+				///*
+				// For Mobile
+				if ( \commons\util\non_browser_agent() ) {
+					$phone_num = $_POST['reg_login_phone'];
+				}
+				//*/
+
 				//$auth_code = $_POST['reg_login_auth_code'];
 
 				\commons\log\logd( TAG_AUTH, "auth: {" );
@@ -270,6 +294,14 @@ function link_page($location) {
 					\commons\log\logd( TAG_AUTH, "Account edited [FALSE]" );
 
 					unset( $_SESSION['reg_edit_account'] );
+
+					///*
+					// For Mobile
+					if ( \commons\util\non_browser_agent() ) {
+						\commons\response\json_ro( JSON_RESULT_FAIL );
+					}
+					//*/
+
 					exit;
 				}
 
@@ -277,6 +309,25 @@ function link_page($location) {
 
 				unset( $_SESSION['reg_edit_account'] );
 				get_user_info( $db, $id );
+
+				///*
+				// For Mobile
+				if ( \commons\util\non_browser_agent() ) {
+					$json_data = Array();
+					if ( is_array($json_data) ) {
+						$json_data[JSON_RESULT] = JSON_RESULT_SUCCESS;
+						$json_data[JSON_ACCOUNT_INFO_ID] = $id;
+						$json_data[JSON_ACCOUNT_INFO_NAME] = $name;
+						$json_data[JSON_ACCOUNT_INFO_EMAIL] = $email;
+						$json_data[JSON_ACCOUNT_INFO_PHONE] = $phone_num;
+						\commons\response\json_array( $json_data );
+					}
+
+					//\commons\response\json_ro( JSON_RESULT_SUCCESS );
+					exit;
+				}
+				//*/
+
 				link_page( PAGE__HOME );
 				exit;
 			}
@@ -434,7 +485,7 @@ function link_page($location) {
 					if ( is_array($json_data) ) {
 						$json_data[JSON_RESULT] = JSON_RESULT_SUCCESS;
 						$json_data[JSON_LOGIN] = JSON_RESULT_SUCCESS;
-						$json_data[JSON_LOGIN_ALREADY] = JSON_RESULT_SUCCESS;
+						$json_data[JSON_LOGIN_ALREADY] = JSON_RESULT_FALSE;
 						$json_data[JSON_LOGIN_USER_NAME] = $_SESSION['user_name'];
 						$json_data[JSON_LOGIN_USER_EMAIL] = $_SESSION['user_email'];
 						$json_data[JSON_LOGIN_USER_PHONE] = $_SESSION['user_phone'];
@@ -461,15 +512,22 @@ function link_page($location) {
 			if ( \commons\util\non_browser_agent() ) {
 				//\commons\response\json_ro( JSON_RESULT_SUCCESS );
 
-				$json_data = Array();
-				if ( is_array($json_data) ) {
-					$json_data[JSON_RESULT] = JSON_RESULT_SUCCESS;
-					$json_data[JSON_LOGIN] = JSON_RESULT_SUCCESS;
-					$json_data[JSON_LOGIN_ALREADY] = JSON_RESULT_SUCCESS;
-					$json_data[JSON_LOGIN_USER_NAME] = $_SESSION['user_name'];
-					$json_data[JSON_LOGIN_USER_EMAIL] = $_SESSION['user_email'];
-					$json_data[JSON_LOGIN_USER_PHONE] = $_SESSION['user_phone'];
-					\commons\response\json_array( $json_data );
+				if ( $_SESSION['reg_get_account_info'] ) {
+					//! SEE: account_info page
+					unset( $_SESSION['reg_get_account_info'] );
+				}
+				// ...
+				else {
+					$json_data = Array();
+					if ( is_array($json_data) ) {
+						$json_data[JSON_RESULT] = JSON_RESULT_SUCCESS;
+						$json_data[JSON_LOGIN] = JSON_RESULT_SUCCESS;
+						$json_data[JSON_LOGIN_ALREADY] = JSON_RESULT_SUCCESS;
+						$json_data[JSON_LOGIN_USER_NAME] = $_SESSION['user_name'];
+						$json_data[JSON_LOGIN_USER_EMAIL] = $_SESSION['user_email'];
+						$json_data[JSON_LOGIN_USER_PHONE] = $_SESSION['user_phone'];
+						\commons\response\json_array( $json_data );
+					}
 				}
 			}
 			//*/

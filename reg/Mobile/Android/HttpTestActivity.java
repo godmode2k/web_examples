@@ -5,7 +5,7 @@
  * Date:		Since Oct 24, 2015
  * Filename:	HttpTestActivity.java
  * 
- * Last modified:	Oct 24, 2015
+ * Last modified:	Oct 13, 2015
  * License:
  * 
  *
@@ -142,8 +142,12 @@ public class HttpTestActivity extends Activity {
 
 
 	// Action
+	private static final int __ACTION_UNKNOWN__ = -1;
 	private static final int __ACTION_LOGIN__ = 0;
 	private static final int __ACTION_LOGOUT__ = 1;
+	private static final int __ACTION_GET_ACCOUNT_INFO__ = 2;
+	private static final int __ACTION_SET_ACCOUNT_INFO__ = 3;
+	private static final int __ACTION_SET_ACCOUNT_INFO_REMOVE__ = 4;
 
 	
 	// session id
@@ -155,6 +159,15 @@ public class HttpTestActivity extends Activity {
 	private String m_port = null;
 	private String m_userid = null;
 	private String m_passwd = null;
+	
+	// account info
+	private String m_account_info_id = null;
+	private String m_account_info_passwd_cur = null;
+	private String m_account_info_passwd_new = null;
+	private String m_account_info_name = null;
+	private String m_account_info_email = null;
+	private String m_account_info_email_confirm = null;
+	private String m_account_info_phone = null;
 	
 	
 	
@@ -297,6 +310,7 @@ public class HttpTestActivity extends Activity {
     	{
     		Button btn_login = (Button)findViewById( R.id.Button_login );
     		Button btn_logout = (Button)findViewById( R.id.Button_logout );
+    		Button btn_account_info = (Button)findViewById( R.id.Button_account_info );
     		
     		if ( btn_login != null ) {
     			btn_login.setOnClickListener( new OnClickListener() {
@@ -348,9 +362,34 @@ public class HttpTestActivity extends Activity {
 						// TODO Auto-generated method stub
 						
 						http_method_test( __ACTION_LOGOUT__, m_ipaddr, m_port );
+						
+						clear_layout_all();
 					}
 				});
     		}
+    		
+    		if ( btn_account_info != null ) {
+    			btn_account_info.setOnClickListener( new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						
+						clear_layout_all();
+						
+						final LinearLayout account_info = (LinearLayout)findViewById( R.id.LinearLayout_account_info );
+						if ( account_info == null ) {
+							Toast.makeText( HttpTestActivity.this, "account layout == NULL", Toast.LENGTH_SHORT ).show();
+							return;
+						}
+						account_info.setVisibility( View.VISIBLE );
+						
+						
+						http_method_test( __ACTION_GET_ACCOUNT_INFO__, m_ipaddr, m_port, m_userid, m_passwd );
+					}
+				});
+    		}
+    		
+    		
     		
     		{
     			EditText et_ipaddr = (EditText)findViewById( R.id.EditText_ipaddr );
@@ -359,10 +398,10 @@ public class HttpTestActivity extends Activity {
 				EditText et_passwd = (EditText)findViewById( R.id.EditText_passwd );
 				
 				if ( et_ipaddr != null )
-					et_ipaddr.setText( "" );	// ipaddr: xxx.xxx.xxx.xxx
+					et_ipaddr.setText( "192.168." );
 				
 				if ( et_port != null )
-					et_port.setText( "8080" );	// port: xxxx
+					et_port.setText( "8080" );
 				
 				if ( et_userid != null )
 					et_userid.setText( "test1" );
@@ -370,6 +409,214 @@ public class HttpTestActivity extends Activity {
 				if ( et_passwd != null )
 					et_passwd.setText( "12345678" );
     		}
+    		
+    		
+    		
+    		// Account layout
+    		{
+    			final LinearLayout account_info = (LinearLayout)findViewById( R.id.LinearLayout_account_info );
+    			if ( account_info == null ) {
+    				Log.d( TAG, "init(): account layout == NULL" );
+    				Toast.makeText( HttpTestActivity.this, "account layout == NULL", Toast.LENGTH_SHORT ).show();
+    				return false;
+    			}
+    			
+    			final Button btn_account_info_done = (Button)account_info.findViewById( R.id.Button_account_info_done );
+    			final Button btn_account_info_remove = (Button)account_info.findViewById( R.id.Button_account_info_remove );
+    			
+    			
+    			if ( btn_account_info_done != null ) {
+    				btn_account_info_done.setOnClickListener( new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							
+							//final TextView tv_account_info_id = (TextView)account_info.findViewById( R.id.TextView_account_info_id );
+							final EditText et_account_info_passwd_current = (EditText)account_info.findViewById( R.id.EditText_account_info_passwd_current );
+							final EditText et_account_info_passwd_new = (EditText)account_info.findViewById( R.id.EditText_account_info_passwd_new );
+							final EditText et_account_info_passwd_new_confirm = (EditText)account_info.findViewById( R.id.EditText_account_info_passwd_new_confirm );
+							final EditText et_account_info_name = (EditText)account_info.findViewById( R.id.EditText_account_info_name );
+							final EditText et_account_info_email = (EditText)account_info.findViewById( R.id.EditText_account_info_email );
+							final EditText et_account_info_email_confirm = (EditText)account_info.findViewById( R.id.EditText_account_info_email_confirm );
+							final EditText et_account_info_phone = (EditText)account_info.findViewById( R.id.EditText_account_info_phone );
+							//String account_info_id = null;
+							String account_info_passwd_current = null;
+							String account_info_passwd_new = null;
+							String account_info_passwd_new_confirm = null;
+							String account_info_name = null;
+							String account_info_email = null;
+							String account_info_email_confirm = null;
+							String account_info_phone = null;
+							
+							//if ( tv_account_info_id != null ) {
+							//	if ( tv_account_info_id.getText() != null ) {
+							//		account_info_id = tv_account_info_id.getText().toString();
+							//	}
+							//}
+							
+							if ( et_account_info_passwd_current != null ) {
+								if ( et_account_info_passwd_current.getText() != null ) {
+									account_info_passwd_current = et_account_info_passwd_current.getText().toString();
+								}
+							}
+							
+							if ( et_account_info_passwd_new != null ) {
+								if ( et_account_info_passwd_new.getText() != null ) {
+									account_info_passwd_new = et_account_info_passwd_new.getText().toString();
+								}
+							}
+							
+							if ( et_account_info_passwd_new_confirm != null ) {
+								if ( et_account_info_passwd_new_confirm.getText() != null ) {
+									account_info_passwd_new_confirm = et_account_info_passwd_new_confirm.getText().toString();
+								}
+							}
+							
+							if ( et_account_info_name != null ) {
+								if ( et_account_info_name.getText() != null ) {
+									account_info_name = et_account_info_name.getText().toString();
+								}
+							}
+							
+							if ( et_account_info_email != null ) {
+								if ( et_account_info_email.getText() != null ) {
+									account_info_email = et_account_info_email.getText().toString();
+								}
+							}
+							
+							if ( et_account_info_email_confirm != null ) {
+								if ( et_account_info_email_confirm.getText() != null ) {
+									account_info_email_confirm = et_account_info_email_confirm.getText().toString();
+								}
+							}
+							
+							if ( et_account_info_phone != null ) {
+								if ( et_account_info_phone != null ) {
+									account_info_phone = et_account_info_phone.getText().toString();
+								}
+							}
+							
+							
+							if ( (account_info_name == null) ||
+									(account_info_email == null) ||
+									(account_info_email_confirm == null) ||
+									(account_info_phone == null) ) {
+								Log.d( TAG, "init(): account info == NULL" );
+								return;
+							}
+							if ( account_info_name.isEmpty() || account_info_phone.isEmpty() ) {
+								Log.d( TAG, "init(): account info (name, phone) == empty" );
+								Toast.makeText( HttpTestActivity.this, "fill out: name, phone ", Toast.LENGTH_SHORT ).show();
+								return;
+							}
+							if ( account_info_email.isEmpty() || account_info_email_confirm.isEmpty() ) {
+								if ( account_info_email.isEmpty() ) {
+									Log.d( TAG, "init(): account info (email) == empty" );
+									Toast.makeText( HttpTestActivity.this, "fill out: email", Toast.LENGTH_SHORT ).show();
+									return;
+								}
+								if ( account_info_email_confirm.isEmpty() ) {
+									if ( !m_account_info_email.equals(account_info_email) ) {
+										Log.d( TAG, "init(): account info (confirm email) == empty" );
+										Toast.makeText( HttpTestActivity.this, "fill out: confirm email", Toast.LENGTH_SHORT ).show();
+										return;
+									}
+								}
+							}
+							
+							
+							// Passwd
+							/*
+							if ( (account_info_passwd_current != null) && (account_info_passwd_new != null) ) {
+								if ( !account_info_passwd_current.equals(account_info_passwd_new) ) {
+									Log.d( TAG, "init(): passwd doesn't matched" );
+									Toast.makeText( HttpTestActivity.this, "passwd doesn't matched", Toast.LENGTH_SHORT ).show();
+									return;
+								}
+							}
+							*/
+							if ( (account_info_passwd_current != null) &&
+									(account_info_passwd_new != null) && (account_info_passwd_new_confirm != null) ) {
+								if ( !account_info_passwd_current.isEmpty() ||
+										!account_info_passwd_new.isEmpty() ||
+										!account_info_passwd_new_confirm.isEmpty() ) {
+									if ( account_info_passwd_current.isEmpty() ) {
+										Log.d( TAG, "init(): account info (current passwd) == empty" );
+										Toast.makeText( HttpTestActivity.this, "fill out: current passwd", Toast.LENGTH_SHORT ).show();
+										return;
+									}
+									if ( account_info_passwd_new.isEmpty() ) {
+										Log.d( TAG, "init(): account info (new passwd) == empty" );
+										Toast.makeText( HttpTestActivity.this, "fill out: new passwd", Toast.LENGTH_SHORT ).show();
+										return;
+									}
+									if ( account_info_passwd_new_confirm.isEmpty() ) {
+										Log.d( TAG, "init(): account info (confirm new passwd) == empty" );
+										Toast.makeText( HttpTestActivity.this, "fill out: confirm new passwd", Toast.LENGTH_SHORT ).show();
+										return;
+									}
+								
+									// confirm new password
+									if ( !account_info_passwd_new.equals(account_info_passwd_new_confirm) ) {
+										Log.d( TAG, "init(): new passwd doesn't matched" );
+										Toast.makeText( HttpTestActivity.this, "new passwd doesn't matched", Toast.LENGTH_SHORT ).show();
+										return;
+									}
+								}
+							}
+							
+							// Email
+							if ( (account_info_email != null) && (account_info_email_confirm != null) ) {
+								if ( !m_account_info_email.equals(account_info_email) ) {
+									if ( !account_info_email.equals(account_info_email_confirm) ) {
+										Log.d( TAG, "init(): email doesn't matched" );
+										Toast.makeText( HttpTestActivity.this, "email doesn't matched", Toast.LENGTH_SHORT ).show();
+										return;
+									}
+								}
+							}
+							
+							// Phone
+							if ( account_info_phone != null ) {
+								// check...
+								// ...
+							}
+							
+							
+							http_method_test( __ACTION_SET_ACCOUNT_INFO__, m_ipaddr, m_port, m_userid, m_passwd );
+						}
+					});
+    			}
+    			
+    			if ( btn_account_info_remove != null ) {
+    				btn_account_info_remove.setOnClickListener( new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							
+							final EditText et_account_info_passwd_current = (EditText)account_info.findViewById( R.id.EditText_account_info_remove_passwd_current );
+							String account_info_remove_passwd_current = null;
+							
+							if ( et_account_info_passwd_current != null ) {
+								if ( et_account_info_passwd_current.getText() != null ) {
+									account_info_remove_passwd_current = et_account_info_passwd_current.getText().toString();
+									
+									if ( !account_info_remove_passwd_current.isEmpty() ) {
+										// confirm new password
+										if ( !m_passwd.equals(account_info_remove_passwd_current) ) {
+											Log.d( TAG, "init(): passwd doesn't matched" );
+											Toast.makeText( HttpTestActivity.this, "new passwd doesn't matched", Toast.LENGTH_SHORT ).show();
+											return;
+										}
+										
+										http_method_test( __ACTION_SET_ACCOUNT_INFO_REMOVE__, m_ipaddr, m_port, m_userid, m_passwd );
+									}
+								}
+							}
+						}
+					});
+    			}
+    		} // account layout
     	}
     	
     	
@@ -385,8 +632,63 @@ public class HttpTestActivity extends Activity {
     // ------------------------------------------------------------------------
     
     
+    public void clear_layout_all() {
+    	// Account info
+		{
+			final LinearLayout account_info = (LinearLayout)findViewById( R.id.LinearLayout_account_info );
+			if ( account_info == null ) {
+				Toast.makeText( HttpTestActivity.this, "account layout == NULL", Toast.LENGTH_SHORT ).show();
+				return;
+			}
+			final TextView tv_account_info_id = (TextView)account_info.findViewById( R.id.TextView_account_info_id );
+			final EditText et_account_info_passwd_current = (EditText)account_info.findViewById( R.id.EditText_account_info_passwd_current );
+			final EditText et_account_info_passwd_new = (EditText)account_info.findViewById( R.id.EditText_account_info_passwd_new );
+			final EditText et_account_info_passwd_new_confirm = (EditText)account_info.findViewById( R.id.EditText_account_info_passwd_new_confirm );
+			final EditText et_account_info_name = (EditText)account_info.findViewById( R.id.EditText_account_info_name );
+			final EditText et_account_info_email = (EditText)account_info.findViewById( R.id.EditText_account_info_email );
+			final EditText et_account_info_email_confirm = (EditText)account_info.findViewById( R.id.EditText_account_info_email_confirm );
+			final EditText et_account_info_phone = (EditText)account_info.findViewById( R.id.EditText_account_info_phone );
+			
+			if ( tv_account_info_id != null ) {
+				tv_account_info_id.setText( "" );
+			}
+			
+			if ( et_account_info_passwd_current != null ) {
+				et_account_info_passwd_current.setText( "" );
+			}
+			if ( et_account_info_passwd_new != null ) {
+				et_account_info_passwd_new.setText( "" );
+			}
+			if ( et_account_info_passwd_new_confirm != null ) {
+				et_account_info_passwd_new_confirm.setText( "" );
+			}
+			
+			if ( et_account_info_name != null ) {
+				et_account_info_name.setText( "" );
+			}
+			
+			if ( et_account_info_email != null ) {
+				et_account_info_email.setText( "" );
+			}
+			if ( et_account_info_email_confirm != null ) {
+				et_account_info_email_confirm.setText( "" );
+			}
+			
+			if ( et_account_info_phone != null ) {
+				et_account_info_phone.setText( "" );
+			}
+			
+			account_info.setVisibility( View.GONE );
+		}
+    }
+    
+    
+    // ------------------------------------------------------------------------
+    
+    
     public class HttpMethodTestTask extends AsyncTask<Object, Object, Object> {
-    	String m_response = null;
+    	private int m_action = __ACTION_UNKNOWN__;
+    	private String m_response = null;
     	
 		@Override
 		protected Object doInBackground(Object... arg0) {
@@ -397,13 +699,14 @@ public class HttpTestActivity extends Activity {
 
 			boolean ret = false;
 
-			final int action = (Integer)arg0[0];
 			final String ipaddr_port = (String)arg0[1];
 			final String userid = (String)arg0[2];
 			final String passwd = (String)arg0[3];
+			
+			m_action = (Integer)arg0[0];
 
 			
-			switch ( action ) {
+			switch ( m_action ) {
 				case __ACTION_LOGIN__:
 					{
 						// POST: login
@@ -413,6 +716,18 @@ public class HttpTestActivity extends Activity {
 					{
 						// GET: logout
 						m_response = http_method_post_logout( ipaddr_port );
+					} break;
+				case __ACTION_GET_ACCOUNT_INFO__:
+					{
+						m_response = get_http_account_info( ipaddr_port, userid, passwd );
+					} break;
+				case __ACTION_SET_ACCOUNT_INFO__:
+					{
+						m_response = set_http_account_info( ipaddr_port, userid, passwd );
+					} break;
+				case __ACTION_SET_ACCOUNT_INFO_REMOVE__:
+					{
+						m_response = set_http_account_info_remove( ipaddr_port, userid, passwd );
 					} break;
 				default:
 					break;
@@ -450,6 +765,68 @@ public class HttpTestActivity extends Activity {
 				
 				if ( tv_recv != null ) {
 					tv_recv.setText( m_response );
+				}
+				
+				
+				switch ( m_action ) {
+					case __ACTION_LOGIN__:
+						{
+						} break;
+					case __ACTION_LOGOUT__:
+						{
+						} break;
+					case __ACTION_GET_ACCOUNT_INFO__:
+						{
+							final TextView tv_account_info_id = (TextView)findViewById( R.id.TextView_account_info_id );
+							final EditText et_account_info_name = (EditText)findViewById( R.id.EditText_account_info_name );
+							final EditText et_account_info_email = (EditText)findViewById( R.id.EditText_account_info_email );
+							final EditText et_account_info_phone = (EditText)findViewById( R.id.EditText_account_info_phone );
+							
+							if ( tv_account_info_id != null ) {
+								tv_account_info_id.setText( m_account_info_id );
+							}
+							
+							if ( et_account_info_name != null ) {
+								et_account_info_name.setText( m_account_info_name );
+							}
+							
+							if ( et_account_info_email != null ) {
+								et_account_info_email.setText( m_account_info_email );
+							}
+							
+							if ( et_account_info_phone != null ) {
+								et_account_info_phone.setText( m_account_info_phone );
+							}
+						} break;
+					case __ACTION_SET_ACCOUNT_INFO__:
+						{
+							final TextView tv_account_info_id = (TextView)findViewById( R.id.TextView_account_info_id );
+							final EditText et_account_info_name = (EditText)findViewById( R.id.EditText_account_info_name );
+							final EditText et_account_info_email = (EditText)findViewById( R.id.EditText_account_info_email );
+							final EditText et_account_info_phone = (EditText)findViewById( R.id.EditText_account_info_phone );
+							
+							if ( tv_account_info_id != null ) {
+								tv_account_info_id.setText( m_account_info_id );
+							}
+							
+							if ( et_account_info_name != null ) {
+								et_account_info_name.setText( m_account_info_name );
+							}
+							
+							if ( et_account_info_email != null ) {
+								et_account_info_email.setText( m_account_info_email );
+							}
+							
+							if ( et_account_info_phone != null ) {
+								et_account_info_phone.setText( m_account_info_phone );
+							}
+						} break;
+					case __ACTION_SET_ACCOUNT_INFO_REMOVE__:
+						{
+							clear_layout_all();
+						} break;
+					default:
+						break;
 				}
 			}
 		}
@@ -667,35 +1044,47 @@ public class HttpTestActivity extends Activity {
 //							}
 //						}
 //					}
-					
-					JSONObject json_obj = new JSONObject( response );
-					if ( json_obj != null ) {
-						String result = json_obj.getString( "result" );
-						String login = json_obj.getString( "login" );
-						String login_already = json_obj.getString( "login_already" );
-						String user_name = json_obj.getString( "user_name" );
-						String user_email = json_obj.getString( "user_email" );
-						String user_phone = json_obj.getString( "user_phone" );
-						
-						Log.d( TAG, "http_method_post_login(): JSON obj {" );
-						Log.d( TAG, "http_method_post_login():   - result = " + result );
-						Log.d( TAG, "http_method_post_login():   - login = " + login );
-						Log.d( TAG, "http_method_post_login():   - login_already = " + login_already );
-						Log.d( TAG, "http_method_post_login():   - user_name = " + user_name );
-						Log.d( TAG, "http_method_post_login():   - user_email = " + user_email );
-						Log.d( TAG, "http_method_post_login():   - user_phone = " + user_phone );
-						Log.d( TAG, "http_method_post_login(): }" );
-						
-						
-						response += "\r\n";
-						response += "JSON obj {" + "\r\n";
-						response += "  - result = " + result + "\r\n";
-						response += "  - login = " + login + "\r\n";
-						response += "  - login_already = " + login_already + "\r\n";
-						response += "  - user_name = " + user_name + "\r\n";
-						response += "  - user_email = " + user_email + "\r\n";
-						response += "  - user_phone = " + user_phone + "\r\n";
-						response += "}" + "\r\n";
+
+					String result = null;
+					try {
+						JSONObject json_obj = new JSONObject( response );
+						if ( json_obj != null ) {
+							result = json_obj.getString( "result" );
+							
+							String login = json_obj.getString( "login" );
+							String login_already = json_obj.getString( "login_already" );
+							String user_name = json_obj.getString( "user_name" );
+							String user_email = json_obj.getString( "user_email" );
+							String user_phone = json_obj.getString( "user_phone" );
+							
+							Log.d( TAG, "http_method_post_login(): JSON obj {" );
+							Log.d( TAG, "http_method_post_login():   - result = " + result );
+							Log.d( TAG, "http_method_post_login():   - login = " + login );
+							Log.d( TAG, "http_method_post_login():   - login_already = " + login_already );
+							Log.d( TAG, "http_method_post_login():   - user_name = " + user_name );
+							Log.d( TAG, "http_method_post_login():   - user_email = " + user_email );
+							Log.d( TAG, "http_method_post_login():   - user_phone = " + user_phone );
+							Log.d( TAG, "http_method_post_login(): }" );
+							
+							
+							response += "\r\n";
+							response += "JSON obj {" + "\r\n";
+							response += "  - result = " + result + "\r\n";
+							response += "  - login = " + login + "\r\n";
+							response += "  - login_already = " + login_already + "\r\n";
+							response += "  - user_name = " + user_name + "\r\n";
+							response += "  - user_email = " + user_email + "\r\n";
+							response += "  - user_phone = " + user_phone + "\r\n";
+							response += "}" + "\r\n";
+						}
+					}
+					catch ( Exception e ) {
+						if ( result != null ) {
+							response += "\r\n";
+							response += "JSON obj {" + "\r\n";
+							response += "  - result = " + result + "\r\n";
+							response += "}" + "\r\n";
+						}
 					}
 				}
 				//*/
@@ -880,6 +1269,797 @@ public class HttpTestActivity extends Activity {
 					}
 				}
 				//*/
+				
+				
+				// account info
+				m_account_info_id = null;
+				m_account_info_passwd_cur = null;
+				m_account_info_passwd_new = null;
+				m_account_info_name = null;
+				m_account_info_email = null;
+				m_account_info_email_confirm = null;
+				m_account_info_phone = null;
+				
+				m_ipaddr = null;
+				m_port = null;
+				m_userid = null;
+				m_passwd = null;
+				
+				
+				return response;
+			}
+			else {
+				response = null;
+			}
+
+    	}
+    	catch ( Exception e ) {
+    		e.printStackTrace();
+    	}
+    	
+    	return null;
+    }
+    
+    public String get_http_account_info(String ipaddr_port, String userid, String passwd) {
+    	//Log.d( TAG, "get_http_account_info()" );
+    	
+    	if ( ipaddr_port == null ) {
+    		Log.d( TAG, "get_http_account_info(): ipaddr:port == NULL" );
+    		return null;
+    	}
+    	if ( userid == null ) {
+    		Log.d( TAG, "get_http_account_info(): user id == NULL" );
+    		return null;
+    	}
+    	if ( passwd == null ) {
+    		Log.d( TAG, "get_http_account_info(): passwd == NULL" );
+    		return null;
+    	}
+    	
+    	URL url = null;
+    	HttpURLConnection conn = null;
+    	int response_code = 0;
+    	String response = null;
+    	//InputStream in_stream = null;
+    	OutputStream out_stream = null;
+    	BufferedReader breader = null;
+    	BufferedWriter bwriter = null;
+    	
+    	
+    	//String strURLtext = URLEncoder.encode( strData, "UTF-8" );
+    	
+    	//final String REQ_URL = "http://localhost:8080/reg/account_info.php";
+    	final String REQ_URL = "http://" + ipaddr_port + "/reg/account_info.php";
+    	//final String POST_VAR_ID = "reg_login_id";
+    	//final String POST_VAR_PASSWD = "reg_login_passwd";
+    	//final String user_id = "test1";
+    	//final String user_passwd = "12345678";
+    	final String user_id = userid;
+    	final String user_passwd = passwd;
+
+    	
+    	Log.d( TAG, "get_http_account_info(): REQ_URL = " + REQ_URL );
+    	
+    	try {
+			url = new URL( REQ_URL );
+			if ( url == null ) {
+				Log.d( TAG, "get_http_account_info(): URL == NULL" );
+				return null;
+			}
+			
+			conn = (HttpURLConnection)url.openConnection();
+			if ( conn == null ) {
+				Log.d( TAG, "get_http_account_info(): URLConnection == NULL" );
+				return null;
+			}
+			
+			conn.setRequestProperty( "User-Agent", "mobile_app" );
+			//conn.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded" );
+			conn.setReadTimeout( 15000 );
+			conn.setConnectTimeout( 15000 );
+			conn.setRequestMethod( "POST" );
+			conn.setDoInput( true);
+			conn.setDoOutput( true );
+			conn.setInstanceFollowRedirects( false);	// POST: false
+			//! session id
+			{
+				if ( m_cookie != null ) {
+					conn.setRequestProperty( "cookie", m_cookie );
+				}
+			}
+			
+			
+			out_stream = conn.getOutputStream();
+			if ( out_stream == null ) {
+				Log.d( TAG, "get_http_account_info(): Output Stream == NULL" );
+				return null;
+			}
+			
+			bwriter = new BufferedWriter( new OutputStreamWriter(out_stream, "UTF-8") );
+			if ( bwriter == null ) {
+				Log.d( TAG, "get_http_account_info(): BufferedWriter == NULL" );
+				return null;
+			}
+			
+			StringBuilder data = new StringBuilder();
+			if ( data == null ) {
+				Log.d( TAG, "get_http_account_info(): StringBuilder == NULL" );
+				return null;
+			}
+			{
+				/*
+				data.append( URLEncoder.encode(POST_VAR_ID, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(user_id, "UTF-8") );
+				data.append( "&" );
+				data.append( URLEncoder.encode(POST_VAR_PASSWD, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(user_passwd, "UTF-8") );
+				*/
+				data.append( "" );
+			}
+			
+			bwriter.write( data.toString() );
+			bwriter.flush();
+			bwriter.close();
+			
+			if ( out_stream != null )
+				out_stream.close();
+			
+			
+			response_code = conn.getResponseCode();
+			Log.d( TAG, "get_http_account_info(): response code = " + response_code );
+			if ( response_code == HttpsURLConnection.HTTP_OK ) {
+				Log.d( TAG, "get_http_account_info(): response code = HttpsURLConnection.HTTP_OK" ); 
+				
+				String line = null;
+				
+				breader = new BufferedReader( new InputStreamReader(conn.getInputStream()) );
+				if ( breader == null ) {
+					Log.d( TAG, "get_http_account_info(): BufferedReader == NULL" );
+					return null;
+				}
+				
+				response = "";
+				while ( (line = breader.readLine()) != null ) {
+					if ( line.contains( "<br>") ) {
+						line = line.replace( "<br>", "\r\n" );
+					}
+					response += line;
+				}
+
+				//! session id
+				// Save the session id
+				{
+					final String cookie = conn.getHeaderField( "Set-Cookie" );
+					if ( cookie != null ) {
+						// To preserve stored previous cookie
+						m_cookie = cookie;
+					}
+					
+					// Cookie = PHPSESSID=qqgkmjl5sade1rljfftupj9ei3; path=/
+					Log.d( TAG, "get_http_account_info(): Cookie = " + m_cookie );
+				}
+				
+				Log.d( TAG, "get_http_account_info(): response = " + response );
+				
+				
+				///*
+				//JSON Object
+				response = response.replace( "\uFEFF", "" );	// remove UTF-8 BOM
+				if ( (response != null) && !response.isEmpty() ) {
+//					JSONArray json = new JSONArray( response );
+//					if ( json != null ) {
+//						int size = json.length();
+//						
+//						Log.d( TAG, "get_http_account_info(): JSON obj size = " + size );
+//						
+//						for ( int i = 0; i < size; i++ ) {
+//							JSONObject obj = json.getJSONObject( i );
+//							
+//							if ( obj != null ) {
+//								String result = obj.getString( "result" );
+//							}
+//						}
+//					}
+					
+					JSONObject json_obj = new JSONObject( response );
+					if ( json_obj != null ) {
+						String result = json_obj.getString( "result" );
+						String info_id = json_obj.getString( "account_info_id" );
+						String info_name = json_obj.getString( "account_info_name" );
+						String info_email = json_obj.getString( "account_info_email" );
+						String info_phone = json_obj.getString( "account_info_phone" );
+						
+						Log.d( TAG, "get_http_account_info(): JSON obj {" );
+						Log.d( TAG, "get_http_account_info():   - result = " + result );
+						Log.d( TAG, "get_http_account_info():   - account_info_id = " + info_id );
+						Log.d( TAG, "get_http_account_info():   - account_info_name = " + info_name );
+						Log.d( TAG, "get_http_account_info():   - account_info_email = " + info_email );
+						Log.d( TAG, "get_http_account_info():   - account_info_phone = " + info_phone );
+						Log.d( TAG, "get_http_account_info(): }" );
+						
+						
+						response += "\r\n";
+						response += "JSON obj {" + "\r\n";
+						response += "  - result = " + result + "\r\n";
+						response += "  - account_info_id = " + info_id + "\r\n";
+						response += "  - account_info_name = " + info_name + "\r\n";
+						response += "  - account_info_email = " + info_email + "\r\n";
+						response += "  - account_info_phone = " + info_phone + "\r\n";
+						response += "}" + "\r\n";
+						
+						
+						// account info
+						m_account_info_id = info_id;
+						m_account_info_passwd_cur = null;
+						m_account_info_passwd_new = null;
+						m_account_info_name = info_name;
+						m_account_info_email = info_email;
+						m_account_info_email_confirm = null;
+						m_account_info_phone = info_phone;
+					}
+				}
+				//*/
+				
+				
+				return response;
+			}
+			else {
+				response = null;
+			}
+
+    	}
+    	catch ( Exception e ) {
+    		e.printStackTrace();
+    	}
+    	
+    	return null;
+    }
+    
+    public String set_http_account_info(String ipaddr_port, String userid, String passwd) {
+    	//Log.d( TAG, "set_http_account_info()" );
+    	
+    	if ( ipaddr_port == null ) {
+    		Log.d( TAG, "set_http_account_info(): ipaddr:port == NULL" );
+    		return null;
+    	}
+    	if ( userid == null ) {
+    		Log.d( TAG, "set_http_account_info(): user id == NULL" );
+    		return null;
+    	}
+    	if ( passwd == null ) {
+    		Log.d( TAG, "set_http_account_info(): passwd == NULL" );
+    		return null;
+    	}
+    	
+    	URL url = null;
+    	HttpURLConnection conn = null;
+    	int response_code = 0;
+    	String response = null;
+    	//InputStream in_stream = null;
+    	OutputStream out_stream = null;
+    	BufferedReader breader = null;
+    	BufferedWriter bwriter = null;
+    	
+    	
+    	//String strURLtext = URLEncoder.encode( strData, "UTF-8" );
+    	
+    	//final String REQ_URL = "http://localhost:8080/reg/account_info_commit.php";
+    	final String REQ_URL = "http://" + ipaddr_port + "/reg/account_info_commit.php";
+    	final String POST_VAR_ID = "reg_login_id";
+    	final String POST_VAR_PASSWD_CURRENT = "reg_login_passwd_old";
+    	final String POST_VAR_PASSWD_NEW = "reg_login_passwd_new";
+    	final String POST_VAR_NAME = "reg_login_name";
+    	final String POST_VAR_EMAIL = "reg_login_email";
+    	final String POST_VAR_PHONE = "reg_login_phone";
+    	//final String user_id = "test1";
+    	//final String user_passwd = "12345678";
+    	final String user_id = userid;
+    	final String user_passwd = passwd;
+
+    	
+    	Log.d( TAG, "set_http_account_info(): REQ_URL = " + REQ_URL );
+    	
+    	try {
+			url = new URL( REQ_URL );
+			if ( url == null ) {
+				Log.d( TAG, "set_http_account_info(): URL == NULL" );
+				return null;
+			}
+			
+			conn = (HttpURLConnection)url.openConnection();
+			if ( conn == null ) {
+				Log.d( TAG, "set_http_account_info(): URLConnection == NULL" );
+				return null;
+			}
+			
+			conn.setRequestProperty( "User-Agent", "mobile_app" );
+			//conn.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded" );
+			conn.setReadTimeout( 15000 );
+			conn.setConnectTimeout( 15000 );
+			conn.setRequestMethod( "POST" );
+			conn.setDoInput( true);
+			conn.setDoOutput( true );
+			conn.setInstanceFollowRedirects( false);	// POST: false
+			//! session id
+			{
+				if ( m_cookie != null ) {
+					conn.setRequestProperty( "cookie", m_cookie );
+				}
+			}
+			
+			
+			out_stream = conn.getOutputStream();
+			if ( out_stream == null ) {
+				Log.d( TAG, "set_http_account_info(): Output Stream == NULL" );
+				return null;
+			}
+			
+			bwriter = new BufferedWriter( new OutputStreamWriter(out_stream, "UTF-8") );
+			if ( bwriter == null ) {
+				Log.d( TAG, "set_http_account_info(): BufferedWriter == NULL" );
+				return null;
+			}
+			
+			StringBuilder data = new StringBuilder();
+			if ( data == null ) {
+				Log.d( TAG, "set_http_account_info(): StringBuilder == NULL" );
+				return null;
+			}
+			{
+				/*
+				data.append( URLEncoder.encode(POST_VAR_ID, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(user_id, "UTF-8") );
+				data.append( "&" );
+				data.append( URLEncoder.encode(POST_VAR_PASSWD, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(user_passwd, "UTF-8") );
+				*/
+				
+				
+				LinearLayout account_info = (LinearLayout)findViewById( R.id.LinearLayout_account_info );
+				if ( account_info == null ) {
+					Log.d( TAG, "set_http_account_info(): account layout == NULL" );
+					return null;
+				}
+				final TextView tv_account_info_id = (TextView)account_info.findViewById( R.id.TextView_account_info_id );
+				final EditText et_account_info_passwd_current = (EditText)account_info.findViewById( R.id.EditText_account_info_passwd_current );
+				final EditText et_account_info_passwd_new = (EditText)account_info.findViewById( R.id.EditText_account_info_passwd_new );
+				final EditText et_account_info_name = (EditText)account_info.findViewById( R.id.EditText_account_info_name );
+				final EditText et_account_info_email = (EditText)account_info.findViewById( R.id.EditText_account_info_email );
+				final EditText et_account_info_phone = (EditText)account_info.findViewById( R.id.EditText_account_info_phone );
+				String account_info_id = null;
+				String account_info_passwd_current = null;
+				String account_info_passwd_new = null;
+				String account_info_name = null;
+				String account_info_email = null;
+				String account_info_phone = null;
+				
+				if ( tv_account_info_id != null ) {
+					if ( tv_account_info_id.getText() != null ) {
+						account_info_id = tv_account_info_id.getText().toString();
+					}
+				}
+				
+				if ( et_account_info_passwd_current != null ) {
+					if ( et_account_info_passwd_current.getText() != null ) {
+						account_info_passwd_current = et_account_info_passwd_current.getText().toString();
+					}
+				}
+				
+				if ( et_account_info_passwd_new != null ) {
+					if ( et_account_info_passwd_new.getText() != null ) {
+						account_info_passwd_new = et_account_info_passwd_new.getText().toString();
+					}
+				}
+				
+				if ( et_account_info_name != null ) {
+					if ( et_account_info_name.getText() != null ) {
+						account_info_name = et_account_info_name.getText().toString();
+					}
+				}
+				
+				if ( et_account_info_email != null ) {
+					if ( et_account_info_email.getText() != null ) {
+						account_info_email = et_account_info_email.getText().toString();
+					}
+				}
+				
+				if ( et_account_info_phone != null ) {
+					if ( et_account_info_phone != null ) {
+						account_info_phone = et_account_info_phone.getText().toString();
+					}
+				}
+				
+				if ( (account_info_id == null) || (account_info_name == null) ||
+						(account_info_email == null) || (account_info_phone == null) ) {
+					Log.d( TAG, "set_http_account_info(): account info == NULL" );
+					return null;
+				}
+				
+				
+				// ID
+				data.append( URLEncoder.encode(POST_VAR_ID, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(user_id, "UTF-8") );
+				data.append( "&" );
+				
+				// Passwd
+				if ( (account_info_passwd_current != null) && (account_info_passwd_new != null) ) {
+					data.append( URLEncoder.encode(POST_VAR_PASSWD_CURRENT, "UTF-8") );
+					data.append( "=" );
+					data.append( URLEncoder.encode(account_info_passwd_current, "UTF-8") );
+					data.append( "&" );
+					data.append( URLEncoder.encode(POST_VAR_PASSWD_NEW, "UTF-8") );
+					data.append( "=" );
+					data.append( URLEncoder.encode(account_info_passwd_new, "UTF-8") );
+					data.append( "&" );
+				}
+				
+				// Name
+				data.append( URLEncoder.encode(POST_VAR_NAME, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(account_info_name, "UTF-8") );
+				data.append( "&" );
+				
+				// Email
+				data.append( URLEncoder.encode(POST_VAR_EMAIL, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(account_info_email, "UTF-8") );
+				data.append( "&" );
+				
+				// Phone
+				data.append( URLEncoder.encode(POST_VAR_PHONE, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(account_info_phone, "UTF-8") );
+			}
+			
+			bwriter.write( data.toString() );
+			bwriter.flush();
+			bwriter.close();
+			
+			if ( out_stream != null )
+				out_stream.close();
+			
+			
+			response_code = conn.getResponseCode();
+			Log.d( TAG, "set_http_account_info(): response code = " + response_code );
+			if ( response_code == HttpsURLConnection.HTTP_OK ) {
+				Log.d( TAG, "set_http_account_info(): response code = HttpsURLConnection.HTTP_OK" ); 
+				
+				String line = null;
+				
+				breader = new BufferedReader( new InputStreamReader(conn.getInputStream()) );
+				if ( breader == null ) {
+					Log.d( TAG, "set_http_account_info(): BufferedReader == NULL" );
+					return null;
+				}
+				
+				response = "";
+				while ( (line = breader.readLine()) != null ) {
+					if ( line.contains( "<br>") ) {
+						line = line.replace( "<br>", "\r\n" );
+					}
+					response += line;
+				}
+
+				//! session id
+				// Save the session id
+				{
+					final String cookie = conn.getHeaderField( "Set-Cookie" );
+					if ( cookie != null ) {
+						// To preserve stored previous cookie
+						m_cookie = cookie;
+					}
+					
+					// Cookie = PHPSESSID=qqgkmjl5sade1rljfftupj9ei3; path=/
+					Log.d( TAG, "set_http_account_info(): Cookie = " + m_cookie );
+				}
+				
+				Log.d( TAG, "set_http_account_info(): response = " + response );
+				
+				
+				///*
+				//JSON Object
+				response = response.replace( "\uFEFF", "" );	// remove UTF-8 BOM
+				if ( (response != null) && !response.isEmpty() ) {
+//					JSONArray json = new JSONArray( response );
+//					if ( json != null ) {
+//						int size = json.length();
+//						
+//						Log.d( TAG, "set_http_account_info(): JSON obj size = " + size );
+//						
+//						for ( int i = 0; i < size; i++ ) {
+//							JSONObject obj = json.getJSONObject( i );
+//							
+//							if ( obj != null ) {
+//								String result = obj.getString( "result" );
+//							}
+//						}
+//					}
+					
+					JSONObject json_obj = new JSONObject( response );
+					if ( json_obj != null ) {
+						String result = json_obj.getString( "result" );
+						String info_id = json_obj.getString( "account_info_id" );
+						String info_name = json_obj.getString( "account_info_name" );
+						String info_email = json_obj.getString( "account_info_email" );
+						String info_phone = json_obj.getString( "account_info_phone" );
+						
+						Log.d( TAG, "set_http_account_info(): JSON obj {" );
+						Log.d( TAG, "set_http_account_info():   - result = " + result );
+						Log.d( TAG, "set_http_account_info():   - account_info_id = " + info_id );
+						Log.d( TAG, "set_http_account_info():   - account_info_name = " + info_name );
+						Log.d( TAG, "set_http_account_info():   - account_info_email = " + info_email );
+						Log.d( TAG, "set_http_account_info():   - account_info_phone = " + info_phone );
+						Log.d( TAG, "set_http_account_info(): }" );
+						
+						
+						response += "\r\n";
+						response += "JSON obj {" + "\r\n";
+						response += "  - result = " + result + "\r\n";
+						response += "  - account_info_id = " + info_id + "\r\n";
+						response += "  - account_info_name = " + info_name + "\r\n";
+						response += "  - account_info_email = " + info_email + "\r\n";
+						response += "  - account_info_phone = " + info_phone + "\r\n";
+						response += "}" + "\r\n";
+						
+						
+						// account info
+						m_account_info_id = info_id;
+						m_account_info_passwd_cur = null;
+						m_account_info_passwd_new = null;
+						m_account_info_name = info_name;
+						m_account_info_email = info_email;
+						m_account_info_email_confirm = null;
+						m_account_info_phone = info_phone;
+					}
+				}
+				//*/
+				
+				
+				return response;
+			}
+			else {
+				response = null;
+			}
+
+    	}
+    	catch ( Exception e ) {
+    		e.printStackTrace();
+    	}
+    	
+    	return null;
+    }
+    
+    public String set_http_account_info_remove(String ipaddr_port, String userid, String passwd) {
+    	//Log.d( TAG, "set_http_account_info_remove()" );
+    	
+    	if ( ipaddr_port == null ) {
+    		Log.d( TAG, "set_http_account_info_remove(): ipaddr:port == NULL" );
+    		return null;
+    	}
+    	if ( userid == null ) {
+    		Log.d( TAG, "set_http_account_info_remove(): user id == NULL" );
+    		return null;
+    	}
+    	if ( passwd == null ) {
+    		Log.d( TAG, "set_http_account_info_remove(): passwd == NULL" );
+    		return null;
+    	}
+    	
+    	URL url = null;
+    	HttpURLConnection conn = null;
+    	int response_code = 0;
+    	String response = null;
+    	//InputStream in_stream = null;
+    	OutputStream out_stream = null;
+    	BufferedReader breader = null;
+    	BufferedWriter bwriter = null;
+    	
+    	
+    	//String strURLtext = URLEncoder.encode( strData, "UTF-8" );
+    	
+    	//final String REQ_URL = "http://localhost:8080/reg/account_remove_commit.php";
+    	final String REQ_URL = "http://" + ipaddr_port + "/reg/account_remove_commit.php";
+    	//final String POST_VAR_ID = "reg_login_id";
+    	final String POST_VAR_PASSWD_REMOVE = "reg_login_passwd_remove";
+    	//final String user_id = "test1";
+    	//final String user_passwd = "12345678";
+    	final String user_id = userid;
+    	final String user_passwd = passwd;
+
+    	
+    	Log.d( TAG, "set_http_account_info_remove(): REQ_URL = " + REQ_URL );
+    	
+    	try {
+			url = new URL( REQ_URL );
+			if ( url == null ) {
+				Log.d( TAG, "set_http_account_info_remove(): URL == NULL" );
+				return null;
+			}
+			
+			conn = (HttpURLConnection)url.openConnection();
+			if ( conn == null ) {
+				Log.d( TAG, "set_http_account_info_remove(): URLConnection == NULL" );
+				return null;
+			}
+			
+			conn.setRequestProperty( "User-Agent", "mobile_app" );
+			//conn.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded" );
+			conn.setReadTimeout( 15000 );
+			conn.setConnectTimeout( 15000 );
+			conn.setRequestMethod( "POST" );
+			conn.setDoInput( true);
+			conn.setDoOutput( true );
+			conn.setInstanceFollowRedirects( false);	// POST: false
+			//! session id
+			{
+				if ( m_cookie != null ) {
+					conn.setRequestProperty( "cookie", m_cookie );
+				}
+			}
+			
+			
+			out_stream = conn.getOutputStream();
+			if ( out_stream == null ) {
+				Log.d( TAG, "set_http_account_info_remove(): Output Stream == NULL" );
+				return null;
+			}
+			
+			bwriter = new BufferedWriter( new OutputStreamWriter(out_stream, "UTF-8") );
+			if ( bwriter == null ) {
+				Log.d( TAG, "set_http_account_info_remove(): BufferedWriter == NULL" );
+				return null;
+			}
+			
+			StringBuilder data = new StringBuilder();
+			if ( data == null ) {
+				Log.d( TAG, "set_http_account_info_remove(): StringBuilder == NULL" );
+				return null;
+			}
+			{
+				/*
+				data.append( URLEncoder.encode(POST_VAR_ID, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(user_id, "UTF-8") );
+				data.append( "&" );
+				data.append( URLEncoder.encode(POST_VAR_PASSWD, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(user_passwd, "UTF-8") );
+				*/
+				
+				
+				LinearLayout account_info = (LinearLayout)findViewById( R.id.LinearLayout_account_info );
+				if ( account_info == null ) {
+					Log.d( TAG, "set_http_account_info_remove(): account layout == NULL" );
+					return null;
+				}
+				final EditText et_account_info_passwd_remove = (EditText)account_info.findViewById( R.id.EditText_account_info_remove_passwd_current );
+				String account_info_passwd_current_remove = null;
+				
+				if ( et_account_info_passwd_remove != null ) {
+					if ( et_account_info_passwd_remove.getText() != null ) {
+						account_info_passwd_current_remove = et_account_info_passwd_remove.getText().toString();
+						
+						if ( account_info_passwd_current_remove != null ) {
+							if ( account_info_passwd_current_remove.isEmpty() ) {
+								account_info_passwd_current_remove = null;
+							}
+						}
+					}
+				}
+				
+				if ( account_info_passwd_current_remove == null ) {
+					Log.d( TAG, "set_http_account_info_remove(): account info == NULL" );
+					return null;
+				}
+				
+				
+				// Passwd
+				data.append( URLEncoder.encode(POST_VAR_PASSWD_REMOVE, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(account_info_passwd_current_remove, "UTF-8") );
+			}
+			
+			bwriter.write( data.toString() );
+			bwriter.flush();
+			bwriter.close();
+			
+			if ( out_stream != null )
+				out_stream.close();
+			
+			
+			response_code = conn.getResponseCode();
+			Log.d( TAG, "set_http_account_info_remove(): response code = " + response_code );
+			if ( response_code == HttpsURLConnection.HTTP_OK ) {
+				Log.d( TAG, "set_http_account_info_remove(): response code = HttpsURLConnection.HTTP_OK" ); 
+				
+				String line = null;
+				
+				breader = new BufferedReader( new InputStreamReader(conn.getInputStream()) );
+				if ( breader == null ) {
+					Log.d( TAG, "set_http_account_info_remove(): BufferedReader == NULL" );
+					return null;
+				}
+				
+				response = "";
+				while ( (line = breader.readLine()) != null ) {
+					if ( line.contains( "<br>") ) {
+						line = line.replace( "<br>", "\r\n" );
+					}
+					response += line;
+				}
+
+				//! session id
+				// Save the session id
+				{
+					final String cookie = conn.getHeaderField( "Set-Cookie" );
+					if ( cookie != null ) {
+						// To preserve stored previous cookie
+						m_cookie = cookie;
+					}
+					
+					// Cookie = PHPSESSID=qqgkmjl5sade1rljfftupj9ei3; path=/
+					Log.d( TAG, "set_http_account_info_remove(): Cookie = " + m_cookie );
+				}
+				
+				Log.d( TAG, "set_http_account_info_remove(): response = " + response );
+				
+				
+				///*
+				//JSON Object
+				response = response.replace( "\uFEFF", "" );	// remove UTF-8 BOM
+				if ( (response != null) && !response.isEmpty() ) {
+//					JSONArray json = new JSONArray( response );
+//					if ( json != null ) {
+//						int size = json.length();
+//						
+//						Log.d( TAG, "set_http_account_info_remove(): JSON obj size = " + size );
+//						
+//						for ( int i = 0; i < size; i++ ) {
+//							JSONObject obj = json.getJSONObject( i );
+//							
+//							if ( obj != null ) {
+//								String result = obj.getString( "result" );
+//							}
+//						}
+//					}
+					
+					JSONObject json_obj = new JSONObject( response );
+					if ( json_obj != null ) {
+						String result = json_obj.getString( "result" );
+						
+						Log.d( TAG, "set_http_account_info_remove(): JSON obj {" );
+						Log.d( TAG, "set_http_account_info_remove():   - result = " + result );
+						Log.d( TAG, "set_http_account_info_remove(): }" );
+						
+						
+						response += "\r\n";
+						response += "JSON obj {" + "\r\n";
+						response += "  - result = " + result + "\r\n";
+						response += "}" + "\r\n";
+					}
+				}
+				//*/
+				
+				
+				// account info
+				m_account_info_id = null;
+				m_account_info_passwd_cur = null;
+				m_account_info_passwd_new = null;
+				m_account_info_name = null;
+				m_account_info_email = null;
+				m_account_info_email_confirm = null;
+				m_account_info_phone = null;
+				
+				m_ipaddr = null;
+				m_port = null;
+				m_userid = null;
+				m_passwd = null;
+				m_cookie = null;
 				
 				
 				return response;
