@@ -12,6 +12,33 @@
 	\commons\log\_echo( "----------------------" );
 
 
+	///*
+	{
+		// For Mobile
+		if ( \commons\util\non_browser_agent() ) {
+			//\commons\response\json_rkv( JSON_RESULT_FAIL, JSON_LOGIN_LOCKED, JSON_RESULT_TRUE );
+			//JSON_LOGIN_CONFIRM_URL
+			$json_data = Array();
+			if ( is_array($json_data) ) {
+				// POST
+				//$confirm_url = "<a href='account_confirm.php?id="
+				//				. $m_reg_login_id . "&auth=" . $auth . "'>confirm url</a>";
+
+				$confirm_url = "account_confirm.php?id="
+								. $_GET['id'] . "&auth=" . $_GET['auth'];
+
+				$json_data[JSON_RESULT] = JSON_RESULT_SUCCESS;
+				$json_data[JSON_LOGIN_LOCKED] = JSON_RESULT_SUCCESS;
+				$json_data[JSON_LOGIN_CONFIRM_URL] = $confirm_url;
+				\commons\response\json_array( $json_data );
+			}
+
+			exit;
+		}
+	}
+	//*/
+
+
 
 	\commons\log\_echo( "<hr>" );
 ?>

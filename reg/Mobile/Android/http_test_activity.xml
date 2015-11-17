@@ -45,10 +45,10 @@
 				android:text="logout"
 			/>
 
-			<Button android:id="@+id/Button_test"
+			<Button android:id="@+id/Button_sign_up"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="test"
+				android:text="sign-up"
 			/>
 
 			<Button android:id="@+id/Button_account_info"
@@ -657,20 +657,6 @@
 					/>
 					-->
 				</LinearLayout>
-				<!--
-				<EditText
-					android:id="@+id/EditText_account_phone"
-					android:layout_width="100dp" 
-					android:layout_height="wrap_content"
-					android:gravity="center_vertical|left"
-					android:layout_gravity="left|center_vertical|center_horizontal"
-					android:singleLine="true"
-					android:textSize="16sp"
-					android:textColor="#A9A9A9"
-					android:text=""
-					android:inputType="phone"
-				/>
-				-->
 				<Button android:id="@+id/Button_account_info_done"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -730,6 +716,336 @@
 					android:text="Remove"
 				/>
 			</LinearLayout> <!-- account info -->
+
+
+			<!-- sign-up -->
+			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:id="@+id/LinearLayout_sign_up"
+				android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:gravity="left|center_vertical|center_horizontal"
+				android:background="#00000000"
+				android:visibility="gone"
+			>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="#A9A9A9"
+					android:text="=== sign-up ==="
+					android:textSize="16sp"
+					android:textStyle="bold"
+					android:singleLine="true"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:layout_gravity="left|center_vertical|center_horizontal"
+				/>
+
+				<!-- ID -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="ID: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_sign_up_id"
+						android:layout_width="150dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+					/>
+				</LinearLayout>
+
+				<!-- Password -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="Password: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<!--
+						android:password="true"
+						android:inputType="number"
+						android:maxLength="8"
+					-->
+					<EditText
+						android:id="@+id/EditText_sign_up_passwd"
+						android:layout_width="150dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:maxLength="8"
+					/>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="(8 length)"
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+				</LinearLayout>
+
+				<!-- confirm password -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="confirm password: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<!--
+						android:password="true"
+						android:inputType="number"
+						android:maxLength="8"
+					-->
+					<EditText
+						android:id="@+id/EditText_sign_up_passwd_confirm"
+						android:layout_width="150dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:maxLength="8"
+					/>
+				</LinearLayout>
+
+				<!-- Name -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="Name: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_sign_up_name"
+						android:layout_width="50dp" 
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+					/>
+				</LinearLayout>
+
+				<!-- email -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="email: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_sign_up_email"
+						android:layout_width="50dp" 
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+					/>
+				</LinearLayout>
+
+				<!-- confirm email -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="confirm email: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_sign_up_email_confirm"
+						android:layout_width="50dp" 
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+					/>
+				</LinearLayout>
+
+				<!-- phone -->
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:background="#00000000"
+				>
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="#A9A9A9"
+						android:text="Phone: "
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:singleLine="true"
+						android:gravity="left|center_vertical|center_horizontal"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+					/>
+					<EditText
+						android:id="@+id/EditText_sign_up_phone"
+						android:layout_width="300dp" 
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical|left"
+						android:layout_gravity="left|center_vertical|center_horizontal"
+						android:singleLine="true"
+						android:textSize="16sp"
+						android:textColor="#A9A9A9"
+						android:text=""
+						android:inputType="phone"
+						android:maxLength="13"
+					/>
+				</LinearLayout>
+				<Button android:id="@+id/Button_sign_up_done"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Done"
+				/>
+			</LinearLayout> <!-- sign-up -->
+
+
+			<!-- sign-up confirm url -->
+			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:id="@+id/LinearLayout_sign_up_confirm_url"
+				android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:gravity="left|center_vertical|center_horizontal"
+				android:background="#00000000"
+				android:visibility="gone"
+			>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="#A9A9A9"
+					android:text="Confirm URL: "
+					android:textSize="16sp"
+					android:textStyle="bold"
+					android:singleLine="true"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:layout_gravity="left|center_vertical|center_horizontal"
+				/>
+				<TextView
+					android:id="@+id/TextView_sign_up_confirm_url"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="#A9A9A9"
+					android:text=""
+					android:textSize="16sp"
+					android:textStyle="bold"
+					android:singleLine="true"
+					android:gravity="left|center_vertical|center_horizontal"
+					android:layout_gravity="left|center_vertical|center_horizontal"
+				/>
+			</LinearLayout>
+
+
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

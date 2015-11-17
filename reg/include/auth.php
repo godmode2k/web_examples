@@ -183,6 +183,13 @@ function link_page($location) {
 				$phone_num_2 = $_POST['reg_login_phone_num_2'];
 				$phone_num_3 = $_POST['reg_login_phone_num_3'];
 				$phone_num = $phone_num_1 . "-" . $phone_num_2 . "-" . $phone_num_3;
+				///*
+				// For Mobile
+				if ( \commons\util\non_browser_agent() ) {
+					$phone_num = $_POST['reg_login_phone'];
+				}
+				//*/
+
 				//$auth_code = $_POST['reg_login_auth_code'];
 
 				\commons\log\logd( TAG_AUTH, "auth: {" );

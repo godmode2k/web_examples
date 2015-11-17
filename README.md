@@ -6,7 +6,8 @@ Summary
 ----------
 > The sources show you how to make a simple Web page for <br>
 > manage the account(sign-in/up) and schedule. <br>
-> And handle JSON response in PHP/Android (Currently login/logout, account info only). <br>
+> And handle JSON response in PHP/Android (Currently
+>    login/logout, account info and sign-up only). <br>
 > In Android, you can see how to keep PHP session.
 
 
@@ -70,7 +71,7 @@ Note
 >
 	For Mobile App,
 	You have to set <User-Agent> to "mobile_app" for JSON response.
-	Currently login/logout, account info only.
+	Currently login/logout, account info and sign-up only.
 
 
 
@@ -112,5 +113,9 @@ Screenshots
 > Account info
 
 ![alt tag](https://github.com/godmode2k/web_examples/raw/master/reg/screenshots/android_02_account_info.png)
+
+> Sign-Up
+
+![alt tag](https://github.com/godmode2k/web_examples/raw/master/reg/screenshots/android_03_sign_up.png)
 
 

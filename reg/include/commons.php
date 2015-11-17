@@ -6,7 +6,7 @@ Author:		Ho-Jung Kim (godmode2k@hotmail.com)
 Date:		Since November 16, 2013
 Filename:	commons.php
 
-Last modified: Nov 13, 2015
+Last modified: Nov 16, 2015
 License:
 
 *
@@ -114,6 +114,7 @@ define( JSON_LOGIN, "login" );
 define( JSON_LOGIN_LOCKED, "login_locked" );
 define( JSON_LOGIN_CONFIRM_URL, "login_confirm_url" );
 define( JSON_LOGIN_ALREADY, "login_already" );
+define( JSON_LOGIN_USER_ID, "user_id" );
 define( JSON_LOGIN_USER_NAME, "user_name" );
 define( JSON_LOGIN_USER_EMAIL, "user_email" );
 define( JSON_LOGIN_USER_PHONE, "user_phone" );

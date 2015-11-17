@@ -5,7 +5,7 @@
  * Date:		Since Oct 24, 2015
  * Filename:	HttpTestActivity.java
  * 
- * Last modified:	Oct 13, 2015
+ * Last modified:	Nov 16, 2015
  * License:
  * 
  *
@@ -130,8 +130,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 
 import java.util.Arrays;
 
@@ -145,9 +148,10 @@ public class HttpTestActivity extends Activity {
 	private static final int __ACTION_UNKNOWN__ = -1;
 	private static final int __ACTION_LOGIN__ = 0;
 	private static final int __ACTION_LOGOUT__ = 1;
-	private static final int __ACTION_GET_ACCOUNT_INFO__ = 2;
-	private static final int __ACTION_SET_ACCOUNT_INFO__ = 3;
-	private static final int __ACTION_SET_ACCOUNT_INFO_REMOVE__ = 4;
+	private static final int __ACTION_SIGN_UP__ = 2;
+	private static final int __ACTION_GET_ACCOUNT_INFO__ = 3;
+	private static final int __ACTION_SET_ACCOUNT_INFO__ = 4;
+	private static final int __ACTION_SET_ACCOUNT_INFO_REMOVE__ = 5;
 
 	
 	// session id
@@ -168,6 +172,8 @@ public class HttpTestActivity extends Activity {
 	private String m_account_info_email = null;
 	private String m_account_info_email_confirm = null;
 	private String m_account_info_phone = null;
+	//
+	private String m_account_info_confirm_url = null;
 	
 	
 	
@@ -310,19 +316,23 @@ public class HttpTestActivity extends Activity {
     	{
     		Button btn_login = (Button)findViewById( R.id.Button_login );
     		Button btn_logout = (Button)findViewById( R.id.Button_logout );
+    		Button btn_sign_up = (Button)findViewById( R.id.Button_sign_up );
     		Button btn_account_info = (Button)findViewById( R.id.Button_account_info );
     		
     		if ( btn_login != null ) {
     			btn_login.setOnClickListener( new OnClickListener() {
+    				/*
     				final EditText m_et_ipaddr = (EditText)findViewById( R.id.EditText_ipaddr );
     				final EditText m_et_port = (EditText)findViewById( R.id.EditText_port );
     				final EditText m_et_userid = (EditText)findViewById( R.id.EditText_userid );
     				final EditText m_et_passwd = (EditText)findViewById( R.id.EditText_passwd );
+    				*/
     				
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 						
+						/*
 						if ( m_et_ipaddr != null ) {
 							if ( m_et_ipaddr.getText() != null ) {
 								m_ipaddr = m_et_ipaddr.getText().toString();
@@ -346,6 +356,9 @@ public class HttpTestActivity extends Activity {
 								m_passwd = m_et_passwd.getText().toString();
 							}
 						}
+						*/
+						
+						set_ipaddr_idpasswd( true, true );
 						
 						
 						if ( (m_ipaddr != null) && (m_userid != null) && (m_passwd != null) ) {
@@ -364,6 +377,24 @@ public class HttpTestActivity extends Activity {
 						http_method_test( __ACTION_LOGOUT__, m_ipaddr, m_port );
 						
 						clear_layout_all();
+					}
+				});
+    		}
+    		
+    		if ( btn_sign_up != null ) {
+    			btn_sign_up.setOnClickListener( new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						
+						clear_layout_all();
+						
+						final LinearLayout sign_up = (LinearLayout)findViewById( R.id.LinearLayout_sign_up );
+						if ( sign_up == null ) {
+							Toast.makeText( HttpTestActivity.this, "sign-up layout == NULL", Toast.LENGTH_SHORT ).show();
+							return;
+						}
+						sign_up.setVisibility( View.VISIBLE );
 					}
 				});
     		}
@@ -392,6 +423,7 @@ public class HttpTestActivity extends Activity {
     		
     		
     		{
+    			/*
     			EditText et_ipaddr = (EditText)findViewById( R.id.EditText_ipaddr );
     			EditText et_port = (EditText)findViewById( R.id.EditText_port );
 				EditText et_userid = (EditText)findViewById( R.id.EditText_userid );
@@ -408,7 +440,177 @@ public class HttpTestActivity extends Activity {
 				
 				if ( et_passwd != null )
 					et_passwd.setText( "12345678" );
+				*/
+    			
+    			final String ipaddr = "192.168.";
+    			final String port = "8080";
+    			final String id = "test1";
+    			final String passwd = "12345678";
+    			
+    			set_ipaddr_idpasswd( ipaddr, port, id, passwd );
     		}
+    		
+    		
+    		
+    		// Sign-Up layout
+    		{
+    			final LinearLayout sign_up = (LinearLayout)findViewById( R.id.LinearLayout_sign_up );
+    			if ( sign_up == null ) {
+    				Log.d( TAG, "init(): sign-up layout == NULL" );
+    				Toast.makeText( HttpTestActivity.this, "sign-up layout == NULL", Toast.LENGTH_SHORT ).show();
+    				return false;
+    			}
+    			
+    			final Button btn_sign_up_done = (Button)sign_up.findViewById( R.id.Button_sign_up_done );
+    			
+    			if ( btn_sign_up_done != null ) {
+    				btn_sign_up_done.setOnClickListener( new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							
+							
+							final EditText et_sign_up_id = (EditText)sign_up.findViewById( R.id.EditText_sign_up_id );
+							final EditText et_sign_up_passwd = (EditText)sign_up.findViewById( R.id.EditText_sign_up_passwd );
+							final EditText et_sign_up_passwd_confirm = (EditText)sign_up.findViewById( R.id.EditText_sign_up_passwd_confirm );
+							final EditText et_sign_up_name = (EditText)sign_up.findViewById( R.id.EditText_sign_up_name );
+							final EditText et_sign_up_email = (EditText)sign_up.findViewById( R.id.EditText_sign_up_email );
+							final EditText et_sign_up_email_confirm = (EditText)sign_up.findViewById( R.id.EditText_sign_up_email_confirm );
+							final EditText et_sign_up_phone = (EditText)sign_up.findViewById( R.id.EditText_sign_up_phone );
+							String sign_up_id = null;
+							String sign_up_passwd = null;
+							String sign_up_passwd_confirm = null;
+							String sign_up_name = null;
+							String sign_up_email = null;
+							String sign_up_email_confirm = null;
+							String sign_up_phone = null;
+							
+							if ( et_sign_up_id != null ) {
+								if ( et_sign_up_id.getText() != null ) {
+									sign_up_id = et_sign_up_id.getText().toString();
+								}
+							}
+							
+							if ( et_sign_up_passwd != null ) {
+								if ( et_sign_up_passwd.getText() != null ) {
+									sign_up_passwd = et_sign_up_passwd.getText().toString();
+								}
+							}
+							
+							if ( et_sign_up_passwd_confirm != null ) {
+								if ( et_sign_up_passwd_confirm.getText() != null ) {
+									sign_up_passwd_confirm = et_sign_up_passwd_confirm.getText().toString();
+								}
+							}
+							
+							if ( et_sign_up_name != null ) {
+								if ( et_sign_up_name.getText() != null ) {
+									sign_up_name = et_sign_up_name.getText().toString();
+								}
+							}
+							
+							if ( et_sign_up_email != null ) {
+								if ( et_sign_up_email.getText() != null ) {
+									sign_up_email = et_sign_up_email.getText().toString();
+								}
+							}
+							
+							if ( et_sign_up_email_confirm != null ) {
+								if ( et_sign_up_email_confirm.getText() != null ) {
+									sign_up_email_confirm = et_sign_up_email_confirm.getText().toString();
+								}
+							}
+							
+							if ( et_sign_up_phone != null ) {
+								if ( et_sign_up_phone != null ) {
+									sign_up_phone = et_sign_up_phone.getText().toString();
+								}
+							}
+							
+							
+							if ( (sign_up_name == null) ||
+									(sign_up_email == null) ||
+									(sign_up_email_confirm == null) ||
+									(sign_up_phone == null) ) {
+								Log.d( TAG, "init(): sign-up info == NULL" );
+								return;
+							}
+							if ( sign_up_name.isEmpty() || sign_up_phone.isEmpty() ) {
+								Log.d( TAG, "init(): sign-up (name, phone) == empty" );
+								Toast.makeText( HttpTestActivity.this, "fill out: name, phone ", Toast.LENGTH_SHORT ).show();
+								return;
+							}
+							if ( sign_up_email.isEmpty() || sign_up_email_confirm.isEmpty() ) {
+								if ( sign_up_email.isEmpty() ) {
+									Log.d( TAG, "init(): sign-up (email) == empty" );
+									Toast.makeText( HttpTestActivity.this, "fill out: email", Toast.LENGTH_SHORT ).show();
+									return;
+								}
+								if ( sign_up_email_confirm.isEmpty() ) {
+									Log.d( TAG, "init(): sign-up (confirm email) == empty" );
+									Toast.makeText( HttpTestActivity.this, "fill out: confirm email", Toast.LENGTH_SHORT ).show();
+									return;
+								}
+							}
+							
+							
+							// Passwd
+							/*
+							if ( (sign_up_passwd_current != null) && (sign_up_passwd_new != null) ) {
+								if ( !sign_up_passwd_current.equals(sign_up_passwd_new) ) {
+									Log.d( TAG, "init(): passwd doesn't matched" );
+									Toast.makeText( HttpTestActivity.this, "passwd doesn't matched", Toast.LENGTH_SHORT ).show();
+									return;
+								}
+							}
+							*/
+							if ( (sign_up_passwd != null) && (sign_up_passwd_confirm != null) ) {
+								if ( !sign_up_passwd.isEmpty() ||
+										!sign_up_passwd_confirm.isEmpty() ) {
+									if ( sign_up_passwd.isEmpty() ) {
+										Log.d( TAG, "init(): sign-up (passwd) == empty" );
+										Toast.makeText( HttpTestActivity.this, "fill out: passwd", Toast.LENGTH_SHORT ).show();
+										return;
+									}
+									if ( sign_up_passwd_confirm.isEmpty() ) {
+										Log.d( TAG, "init(): sign-up (confirm passwd) == empty" );
+										Toast.makeText( HttpTestActivity.this, "fill out: confirm passwd", Toast.LENGTH_SHORT ).show();
+										return;
+									}
+								
+									// confirm password
+									if ( !sign_up_passwd.equals(sign_up_passwd_confirm) ) {
+										Log.d( TAG, "init(): passwd doesn't matched" );
+										Toast.makeText( HttpTestActivity.this, "passwd doesn't matched", Toast.LENGTH_SHORT ).show();
+										return;
+									}
+								}
+							}
+							
+							// Email
+							if ( (sign_up_email != null) && (sign_up_email_confirm != null) ) {
+								if ( !sign_up_email.equals(sign_up_email_confirm) ) {
+									Log.d( TAG, "init(): email doesn't matched" );
+									Toast.makeText( HttpTestActivity.this, "email doesn't matched", Toast.LENGTH_SHORT ).show();
+									return;
+								}
+							}
+							
+							// Phone
+							if ( sign_up_phone != null ) {
+								// check...
+								// ...
+							}
+							
+							
+							set_ipaddr_idpasswd( true, false );
+							
+							
+							http_method_test( __ACTION_SIGN_UP__, m_ipaddr, m_port );
+						}
+					});
+    			}
+    		} // Sign-Up layout
     		
     		
     		
@@ -516,7 +718,7 @@ public class HttpTestActivity extends Activity {
 									return;
 								}
 								if ( account_info_email_confirm.isEmpty() ) {
-									if ( !m_account_info_email.equals(account_info_email) ) {
+									if ( (m_account_info_email != null) && !m_account_info_email.equals(account_info_email) ) {
 										Log.d( TAG, "init(): account info (confirm email) == empty" );
 										Toast.makeText( HttpTestActivity.this, "fill out: confirm email", Toast.LENGTH_SHORT ).show();
 										return;
@@ -567,7 +769,7 @@ public class HttpTestActivity extends Activity {
 							
 							// Email
 							if ( (account_info_email != null) && (account_info_email_confirm != null) ) {
-								if ( !m_account_info_email.equals(account_info_email) ) {
+								if ( (m_account_info_email != null) && !m_account_info_email.equals(account_info_email) ) {
 									if ( !account_info_email.equals(account_info_email_confirm) ) {
 										Log.d( TAG, "init(): email doesn't matched" );
 										Toast.makeText( HttpTestActivity.this, "email doesn't matched", Toast.LENGTH_SHORT ).show();
@@ -603,7 +805,7 @@ public class HttpTestActivity extends Activity {
 									
 									if ( !account_info_remove_passwd_current.isEmpty() ) {
 										// confirm new password
-										if ( !m_passwd.equals(account_info_remove_passwd_current) ) {
+										if ( (m_passwd != null) && !m_passwd.equals(account_info_remove_passwd_current) ) {
 											Log.d( TAG, "init(): passwd doesn't matched" );
 											Toast.makeText( HttpTestActivity.this, "new passwd doesn't matched", Toast.LENGTH_SHORT ).show();
 											return;
@@ -637,9 +839,11 @@ public class HttpTestActivity extends Activity {
 		{
 			final LinearLayout account_info = (LinearLayout)findViewById( R.id.LinearLayout_account_info );
 			if ( account_info == null ) {
-				Toast.makeText( HttpTestActivity.this, "account layout == NULL", Toast.LENGTH_SHORT ).show();
+				__DEBUG__( "clear_layout_all(): account layout == NULL" );
+				//Toast.makeText( HttpTestActivity.this, "account layout == NULL", Toast.LENGTH_SHORT ).show();
 				return;
 			}
+			
 			final TextView tv_account_info_id = (TextView)account_info.findViewById( R.id.TextView_account_info_id );
 			final EditText et_account_info_passwd_current = (EditText)account_info.findViewById( R.id.EditText_account_info_passwd_current );
 			final EditText et_account_info_passwd_new = (EditText)account_info.findViewById( R.id.EditText_account_info_passwd_new );
@@ -680,6 +884,189 @@ public class HttpTestActivity extends Activity {
 			
 			account_info.setVisibility( View.GONE );
 		}
+		
+    	// Sign-Up
+		{
+			final LinearLayout sign_up = (LinearLayout)findViewById( R.id.LinearLayout_sign_up );
+			if ( sign_up == null ) {
+				__DEBUG__( "clear_layout_all(): sign-up layout == NULL" );
+				//Toast.makeText( HttpTestActivity.this, "sign-up layout == NULL", Toast.LENGTH_SHORT ).show();
+				return;
+			}
+			
+			final EditText et_sign_up_id = (EditText)sign_up.findViewById( R.id.EditText_sign_up_id );
+			final EditText et_sign_up_passwd = (EditText)sign_up.findViewById( R.id.EditText_sign_up_passwd );
+			final EditText et_sign_up_passwd_confirm = (EditText)sign_up.findViewById( R.id.EditText_sign_up_passwd_confirm );
+			final EditText et_sign_up_name = (EditText)sign_up.findViewById( R.id.EditText_sign_up_name );
+			final EditText et_sign_up_email = (EditText)sign_up.findViewById( R.id.EditText_sign_up_email );
+			final EditText et_sign_up_email_confirm = (EditText)sign_up.findViewById( R.id.EditText_sign_up_email_confirm );
+			final EditText et_sign_up_phone = (EditText)sign_up.findViewById( R.id.EditText_sign_up_phone );
+			
+			if ( et_sign_up_id != null ) {
+				et_sign_up_id.setText( "" );
+			}
+			
+			if ( et_sign_up_passwd != null ) {
+				et_sign_up_passwd.setText( "" );
+			}
+			if ( et_sign_up_passwd_confirm != null ) {
+				et_sign_up_passwd_confirm.setText( "" );
+			}
+			
+			if ( et_sign_up_name != null ) {
+				et_sign_up_name.setText( "" );
+			}
+			
+			if ( et_sign_up_email != null ) {
+				et_sign_up_email.setText( "" );
+			}
+			if ( et_sign_up_email_confirm != null ) {
+				et_sign_up_email_confirm.setText( "" );
+			}
+			
+			if ( et_sign_up_phone != null ) {
+				et_sign_up_phone.setText( "" );
+			}
+			
+			sign_up.setVisibility( View.GONE );
+		}
+    }
+    
+    public void clear_layout_confirm_url() {
+    	// Confirm URL
+    	{
+			final LinearLayout sign_up_confirm_url_layout = (LinearLayout)findViewById( R.id.LinearLayout_sign_up_confirm_url );
+			if ( sign_up_confirm_url_layout == null ) {
+				__DEBUG__( "clear_layout_confirm_url(): sign-up confirm url layout == NULL" );
+				//Toast.makeText( HttpTestActivity.this, "sign-up confirm url layout == NULL", Toast.LENGTH_SHORT ).show();
+				return;
+			}
+			
+			TextView tv_confirm_url = (TextView)findViewById( R.id.TextView_sign_up_confirm_url );
+			
+			if ( tv_confirm_url != null ) {
+				tv_confirm_url.setText( "" );
+			}
+			
+			sign_up_confirm_url_layout.setVisibility( View.GONE );
+		}
+    }
+    
+    public void set_ipaddr_idpasswd(boolean ipaddr, boolean idpasswd) {
+		if ( ipaddr ) {
+	    	final EditText et_ipaddr = (EditText)findViewById( R.id.EditText_ipaddr );
+			final EditText et_port = (EditText)findViewById( R.id.EditText_port );
+			
+			m_ipaddr = "";
+			m_port = "";
+			
+			if ( et_ipaddr != null ) {
+				if ( et_ipaddr.getText() != null ) {
+					m_ipaddr = et_ipaddr.getText().toString();
+				}
+			}
+			
+			if ( et_port != null ) {
+				if ( et_port.getText() != null ) {
+					m_port = et_port.getText().toString();
+				}
+			}
+		}
+		
+		if ( idpasswd ) {
+			final EditText et_userid = (EditText)findViewById( R.id.EditText_userid );
+			final EditText et_passwd = (EditText)findViewById( R.id.EditText_passwd );
+			
+			m_userid = "";
+			m_passwd = "";
+			
+			if ( et_userid != null ) {
+				if ( et_userid.getText() != null ) {
+					m_userid = et_userid.getText().toString();
+				}
+			}
+			
+			if ( et_passwd != null ) {
+				if ( et_passwd.getText() != null ) {
+					m_passwd = et_passwd.getText().toString();
+				}
+			}
+		}
+    }
+    
+    public void set_ipaddr_idpasswd(String ipaddr, String port, String id, String passwd) {
+    	final EditText et_ipaddr = (EditText)findViewById( R.id.EditText_ipaddr );
+		final EditText et_port = (EditText)findViewById( R.id.EditText_port );
+		final EditText et_userid = (EditText)findViewById( R.id.EditText_userid );
+		final EditText et_passwd = (EditText)findViewById( R.id.EditText_passwd );
+		
+		m_ipaddr = ipaddr;
+		if ( et_ipaddr != null ) {
+			et_ipaddr.setText( ipaddr );
+		}
+		
+		m_port = port;
+		if ( et_port != null ) {
+			et_port.setText( port );
+		}
+		
+		m_userid = id;
+		if ( et_userid != null ) {
+			et_userid.setText( id );
+		}
+		
+		m_passwd = passwd;
+		if ( et_passwd != null ) {
+			et_passwd.setText( passwd );
+		}
+    }
+    
+    public void set_connection_info_init_all() {
+    	set_connection_info_init( true, true );
+    }
+    
+    public void set_connection_info_init(boolean host, boolean account) {
+    	if ( host ) {
+	    	// session id
+	    	m_cookie = null;
+	    	
+	    	// ipaddr:port, Login
+	    	m_ipaddr = null;
+	    	m_port = null;
+	    	m_userid = null;
+	    	m_passwd = null;
+    	}
+    	
+    	if ( account ) {
+	    	// account info
+	    	m_account_info_id = null;
+	    	m_account_info_passwd_cur = null;
+	    	m_account_info_passwd_new = null;
+	    	m_account_info_name = null;
+	    	m_account_info_email = null;
+	    	m_account_info_email_confirm = null;
+	    	m_account_info_phone = null;
+	    	
+	    	//m_account_info_confirm_url = null;
+    	}
+    }
+    
+    public String make_hyperlink(final String url) {
+    	return make_hyperlink( url, null );
+    }
+    
+    public String make_hyperlink(final String url, final String desc) {
+    	if ( url == null )
+    		return null;
+    	
+		String result = "<a href=\"" + url + "\">";
+		
+		if ( desc != null )
+			result += desc + "</a>";
+		else
+			result += url + "</a>";
+		
+		return result;
     }
     
     
@@ -716,6 +1103,10 @@ public class HttpTestActivity extends Activity {
 					{
 						// GET: logout
 						m_response = http_method_post_logout( ipaddr_port );
+					} break;
+				case __ACTION_SIGN_UP__:
+					{
+						m_response = set_http_sign_up( ipaddr_port );
 					} break;
 				case __ACTION_GET_ACCOUNT_INFO__:
 					{
@@ -774,6 +1165,35 @@ public class HttpTestActivity extends Activity {
 						} break;
 					case __ACTION_LOGOUT__:
 						{
+						} break;
+					case __ACTION_SIGN_UP__:
+						{
+							clear_layout_all();
+							
+							{
+								final LinearLayout sign_up_confirm_url_layout = (LinearLayout)findViewById( R.id.LinearLayout_sign_up_confirm_url );
+								if ( sign_up_confirm_url_layout != null ) {
+									TextView tv_confirm_url = (TextView)findViewById( R.id.TextView_sign_up_confirm_url );
+									
+									if ( (tv_confirm_url != null) && (m_account_info_confirm_url != null) ) {
+										final String url = make_hyperlink( m_account_info_confirm_url );
+									
+										if ( url != null ) {
+											tv_confirm_url.setText( Html.fromHtml(url) );
+											tv_confirm_url.setMovementMethod( LinkMovementMethod.getInstance() );
+											//tv_confirm_url.setAutoLinkMask( Linkify.WEB_URLS );
+											//tv_confirm_url.setLinksClickable( true );
+										}
+										else {
+											__DEBUG__( "HttpMethodTestTask::onPostExecute(): url (hyperlink) = NULL" );
+										}
+									}
+									
+									m_account_info_confirm_url = null;
+									
+									sign_up_confirm_url_layout.setVisibility( View.VISIBLE );
+								}
+							}
 						} break;
 					case __ACTION_GET_ACCOUNT_INFO__:
 						{
@@ -848,6 +1268,8 @@ public class HttpTestActivity extends Activity {
     	HttpMethodTestTask task = new HttpMethodTestTask();
     	String ipaddr_port = ipaddr;
     	
+    	clear_layout_confirm_url();
+		
     	if ( task != null ) {
     		if ( (port != null) && !port.isEmpty() )
     			ipaddr_port += ":" + port;
@@ -945,7 +1367,7 @@ public class HttpTestActivity extends Activity {
 			conn.setRequestMethod( "POST" );
 			conn.setDoInput( true);
 			conn.setDoOutput( true );
-			conn.setInstanceFollowRedirects( false);	// POST: false
+			conn.setInstanceFollowRedirects( true );
 			//! session id
 			{
 				if ( m_cookie != null ) {
@@ -1085,6 +1507,8 @@ public class HttpTestActivity extends Activity {
 							response += "  - result = " + result + "\r\n";
 							response += "}" + "\r\n";
 						}
+						
+						set_connection_info_init( false, true );
 					}
 				}
 				//*/
@@ -1271,6 +1695,7 @@ public class HttpTestActivity extends Activity {
 				//*/
 				
 				
+				/*
 				// account info
 				m_account_info_id = null;
 				m_account_info_passwd_cur = null;
@@ -1284,6 +1709,340 @@ public class HttpTestActivity extends Activity {
 				m_port = null;
 				m_userid = null;
 				m_passwd = null;
+				m_cookie = null;
+				*/
+				set_connection_info_init_all();
+				
+				
+				return response;
+			}
+			else {
+				response = null;
+			}
+
+    	}
+    	catch ( Exception e ) {
+    		e.printStackTrace();
+    	}
+    	
+    	return null;
+    }
+    
+    public String set_http_sign_up(String ipaddr_port/*, String userid, String passwd*/) {
+    	//Log.d( TAG, "set_http_sign_up()" );
+    	
+    	if ( ipaddr_port == null ) {
+    		Log.d( TAG, "set_http_sign_up(): ipaddr:port == NULL" );
+    		return null;
+    	}
+    	/*
+    	if ( userid == null ) {
+    		Log.d( TAG, "set_http_sign_up(): user id == NULL" );
+    		return null;
+    	}
+    	if ( passwd == null ) {
+    		Log.d( TAG, "set_http_sign_up(): passwd == NULL" );
+    		return null;
+    	}
+    	*/
+    	
+    	URL url = null;
+    	HttpURLConnection conn = null;
+    	int response_code = 0;
+    	String response = null;
+    	//InputStream in_stream = null;
+    	OutputStream out_stream = null;
+    	BufferedReader breader = null;
+    	BufferedWriter bwriter = null;
+    	
+    	
+    	//String strURLtext = URLEncoder.encode( strData, "UTF-8" );
+    	
+    	//final String REQ_URL = "http://localhost:8080/reg/account_commit.php";
+    	final String REQ_URL = "http://" + ipaddr_port + "/reg/account_commit.php";
+    	final String REQ_BASE_CONFIRM_URL = "http://" + ipaddr_port + "/reg/";
+    	final String POST_VAR_ID = "reg_login_id";
+    	final String POST_VAR_PASSWD = "reg_login_passwd";
+    	//final String POST_VAR_PASSWD_CONFIRM = "reg_login_passwd_verify";
+    	final String POST_VAR_NAME = "reg_login_name";
+    	final String POST_VAR_EMAIL = "reg_login_email";
+    	final String POST_VAR_PHONE = "reg_login_phone";
+    	//final String user_id = "test1";
+    	//final String user_passwd = "12345678";
+    	//final String user_id = userid;
+    	//final String user_passwd = passwd;
+
+    	
+    	Log.d( TAG, "set_http_sign_up(): REQ_URL = " + REQ_URL );
+    	
+    	try {
+			url = new URL( REQ_URL );
+			if ( url == null ) {
+				Log.d( TAG, "set_http_sign_up(): URL == NULL" );
+				return null;
+			}
+			
+			conn = (HttpURLConnection)url.openConnection();
+			if ( conn == null ) {
+				Log.d( TAG, "set_http_sign_up(): URLConnection == NULL" );
+				return null;
+			}
+			
+			conn.setRequestProperty( "User-Agent", "mobile_app" );
+			//conn.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded" );
+			conn.setReadTimeout( 15000 );
+			conn.setConnectTimeout( 15000 );
+			conn.setRequestMethod( "POST" );
+			conn.setDoInput( true);
+			conn.setDoOutput( true );
+			conn.setInstanceFollowRedirects( true );
+			//! session id
+			{
+				if ( m_cookie != null ) {
+					conn.setRequestProperty( "cookie", m_cookie );
+				}
+			}
+			
+			
+			out_stream = conn.getOutputStream();
+			if ( out_stream == null ) {
+				Log.d( TAG, "set_http_sign_up(): Output Stream == NULL" );
+				return null;
+			}
+			
+			bwriter = new BufferedWriter( new OutputStreamWriter(out_stream, "UTF-8") );
+			if ( bwriter == null ) {
+				Log.d( TAG, "set_http_sign_up(): BufferedWriter == NULL" );
+				return null;
+			}
+			
+			StringBuilder data = new StringBuilder();
+			if ( data == null ) {
+				Log.d( TAG, "set_http_sign_up(): StringBuilder == NULL" );
+				return null;
+			}
+			{
+				/*
+				data.append( URLEncoder.encode(POST_VAR_ID, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(user_id, "UTF-8") );
+				data.append( "&" );
+				data.append( URLEncoder.encode(POST_VAR_PASSWD, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(user_passwd, "UTF-8") );
+				*/
+				
+				
+				LinearLayout sign_up = (LinearLayout)findViewById( R.id.LinearLayout_sign_up );
+				if ( sign_up == null ) {
+					Log.d( TAG, "set_http_sign_up(): sign-up layout == NULL" );
+					return null;
+				}
+				final EditText et_sign_up_id = (EditText)sign_up.findViewById( R.id.EditText_sign_up_id );
+				final EditText et_sign_up_passwd = (EditText)sign_up.findViewById( R.id.EditText_sign_up_passwd );
+				//final EditText et_sign_up_passwd_confirm = (EditText)sign_up.findViewById( R.id.EditText_sign_up_passwd_confirm );
+				final EditText et_sign_up_name = (EditText)sign_up.findViewById( R.id.EditText_sign_up_name );
+				final EditText et_sign_up_email = (EditText)sign_up.findViewById( R.id.EditText_sign_up_email );
+				final EditText et_sign_up_phone = (EditText)sign_up.findViewById( R.id.EditText_sign_up_phone );
+				String sign_up_id = null;
+				String sign_up_passwd = null;
+				//String sign_up_passwd_confirm = null;
+				String sign_up_name = null;
+				String sign_up_email = null;
+				String sign_up_phone = null;
+				
+				if ( et_sign_up_id != null ) {
+					if ( et_sign_up_id.getText() != null ) {
+						sign_up_id = et_sign_up_id.getText().toString();
+					}
+				}
+				
+				if ( et_sign_up_passwd != null ) {
+					if ( et_sign_up_passwd.getText() != null ) {
+						sign_up_passwd = et_sign_up_passwd.getText().toString();
+					}
+				}
+				
+				//if ( et_sign_up_passwd_confirm != null ) {
+				//	if ( et_sign_up_passwd_confirm.getText() != null ) {
+				//		sign_up_passwd_confirm = et_sign_up_passwd_confirm.getText().toString();
+				//	}
+				//}
+				
+				if ( et_sign_up_name != null ) {
+					if ( et_sign_up_name.getText() != null ) {
+						sign_up_name = et_sign_up_name.getText().toString();
+					}
+				}
+				
+				if ( et_sign_up_email != null ) {
+					if ( et_sign_up_email.getText() != null ) {
+						sign_up_email = et_sign_up_email.getText().toString();
+					}
+				}
+				
+				if ( et_sign_up_phone != null ) {
+					if ( et_sign_up_phone != null ) {
+						sign_up_phone = et_sign_up_phone.getText().toString();
+					}
+				}
+				
+				if ( (sign_up_id == null) || (sign_up_name == null) ||
+						(sign_up_passwd == null) || (sign_up_email == null) ||
+						(sign_up_phone == null) ) {
+					Log.d( TAG, "set_http_sign_up(): sign-up info == NULL" );
+					return null;
+				}
+				
+				
+				// ID
+				data.append( URLEncoder.encode(POST_VAR_ID, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(sign_up_id, "UTF-8") );
+				data.append( "&" );
+				
+				// Passwd
+				if ( sign_up_passwd != null ) {
+					data.append( URLEncoder.encode(POST_VAR_PASSWD, "UTF-8") );
+					data.append( "=" );
+					data.append( URLEncoder.encode(sign_up_passwd, "UTF-8") );
+					data.append( "&" );
+				}
+				
+				// Name
+				data.append( URLEncoder.encode(POST_VAR_NAME, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(sign_up_name, "UTF-8") );
+				data.append( "&" );
+				
+				// Email
+				data.append( URLEncoder.encode(POST_VAR_EMAIL, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(sign_up_email, "UTF-8") );
+				data.append( "&" );
+				
+				// Phone
+				data.append( URLEncoder.encode(POST_VAR_PHONE, "UTF-8") );
+				data.append( "=" );
+				data.append( URLEncoder.encode(sign_up_phone, "UTF-8") );
+			}
+			
+			bwriter.write( data.toString() );
+			bwriter.flush();
+			bwriter.close();
+			
+			if ( out_stream != null )
+				out_stream.close();
+			
+			
+			response_code = conn.getResponseCode();
+			Log.d( TAG, "set_http_sign_up(): response code = " + response_code );
+			if ( response_code == HttpsURLConnection.HTTP_OK ) {
+				Log.d( TAG, "set_http_sign_up(): response code = HttpsURLConnection.HTTP_OK" ); 
+				
+				String line = null;
+				
+				breader = new BufferedReader( new InputStreamReader(conn.getInputStream()) );
+				if ( breader == null ) {
+					Log.d( TAG, "set_http_sign_up(): BufferedReader == NULL" );
+					return null;
+				}
+				
+				response = "";
+				while ( (line = breader.readLine()) != null ) {
+					if ( line.contains( "<br>") ) {
+						line = line.replace( "<br>", "\r\n" );
+					}
+					response += line;
+				}
+
+				//! session id
+				// Save the session id
+				{
+					final String cookie = conn.getHeaderField( "Set-Cookie" );
+					if ( cookie != null ) {
+						// To preserve stored previous cookie
+						m_cookie = cookie;
+					}
+					
+					// Cookie = PHPSESSID=qqgkmjl5sade1rljfftupj9ei3; path=/
+					Log.d( TAG, "set_http_sign_up(): Cookie = " + m_cookie );
+				}
+				
+				Log.d( TAG, "set_http_sign_up(): response = " + response );
+				
+				
+				///*
+				//JSON Object
+				response = response.replace( "\uFEFF", "" );	// remove UTF-8 BOM
+				if ( (response != null) && !response.isEmpty() ) {
+//					JSONArray json = new JSONArray( response );
+//					if ( json != null ) {
+//						int size = json.length();
+//						
+//						Log.d( TAG, "set_http_sign_up(): JSON obj size = " + size );
+//						
+//						for ( int i = 0; i < size; i++ ) {
+//							JSONObject obj = json.getJSONObject( i );
+//							
+//							if ( obj != null ) {
+//								String result = obj.getString( "result" );
+//							}
+//						}
+//					}
+					
+					String result = null;
+					try {
+						JSONObject json_obj = new JSONObject( response );
+						if ( json_obj != null ) {
+							result = json_obj.getString( "result" );
+							
+							String info_login_locked = json_obj.getString( "login_locked" );
+							String info_confirm_url = json_obj.getString( "login_confirm_url" );
+							
+							Log.d( TAG, "set_http_sign_up(): JSON obj {" );
+							Log.d( TAG, "set_http_sign_up():   - result = " + result );
+							Log.d( TAG, "set_http_sign_up():   - login_locked = " + info_login_locked );
+							Log.d( TAG, "set_http_sign_up():   - confirm_url = " + info_confirm_url );
+							Log.d( TAG, "set_http_sign_up(): }" );
+							
+							
+							response += "\r\n";
+							response += "JSON obj {" + "\r\n";
+							response += "  - result = " + result + "\r\n";
+							response += "  - login_locked = " + info_login_locked + "\r\n";
+							response += "  - confirm_url = " + REQ_BASE_CONFIRM_URL + info_confirm_url + "\r\n";
+							response += "}" + "\r\n";
+							
+							m_account_info_confirm_url = REQ_BASE_CONFIRM_URL + info_confirm_url;
+							Log.d( TAG, "set_http_sign_up(): confirm_url = " + m_account_info_confirm_url );
+							
+							
+							/*
+							// account info
+							m_account_info_id = null;
+							m_account_info_passwd_cur = null;
+							m_account_info_passwd_new = null;
+							m_account_info_name = null;
+							m_account_info_email = null;
+							m_account_info_email_confirm = null;
+							m_account_info_phone = null;
+							*/
+							set_connection_info_init( false, true );
+						}
+					}
+					catch ( Exception e ) {
+						if ( result != null ) {
+							response += "\r\n";
+							response += "JSON obj {" + "\r\n";
+							response += "  - result = " + result + "\r\n";
+							response += "}" + "\r\n";
+						}
+						
+						set_connection_info_init( false, true );
+					}
+				}
+				//*/
 				
 				
 				return response;
@@ -1463,41 +2222,55 @@ public class HttpTestActivity extends Activity {
 //						}
 //					}
 					
-					JSONObject json_obj = new JSONObject( response );
-					if ( json_obj != null ) {
-						String result = json_obj.getString( "result" );
-						String info_id = json_obj.getString( "account_info_id" );
-						String info_name = json_obj.getString( "account_info_name" );
-						String info_email = json_obj.getString( "account_info_email" );
-						String info_phone = json_obj.getString( "account_info_phone" );
+					String result = null;
+					try {
+						JSONObject json_obj = new JSONObject( response );
+						if ( json_obj != null ) {
+							result = json_obj.getString( "result" );
+							
+							String info_id = json_obj.getString( "account_info_id" );
+							String info_name = json_obj.getString( "account_info_name" );
+							String info_email = json_obj.getString( "account_info_email" );
+							String info_phone = json_obj.getString( "account_info_phone" );
+							
+							Log.d( TAG, "get_http_account_info(): JSON obj {" );
+							Log.d( TAG, "get_http_account_info():   - result = " + result );
+							Log.d( TAG, "get_http_account_info():   - account_info_id = " + info_id );
+							Log.d( TAG, "get_http_account_info():   - account_info_name = " + info_name );
+							Log.d( TAG, "get_http_account_info():   - account_info_email = " + info_email );
+							Log.d( TAG, "get_http_account_info():   - account_info_phone = " + info_phone );
+							Log.d( TAG, "get_http_account_info(): }" );
+							
+							
+							response += "\r\n";
+							response += "JSON obj {" + "\r\n";
+							response += "  - result = " + result + "\r\n";
+							response += "  - account_info_id = " + info_id + "\r\n";
+							response += "  - account_info_name = " + info_name + "\r\n";
+							response += "  - account_info_email = " + info_email + "\r\n";
+							response += "  - account_info_phone = " + info_phone + "\r\n";
+							response += "}" + "\r\n";
+							
+							
+							// account info
+							m_account_info_id = info_id;
+							m_account_info_passwd_cur = null;
+							m_account_info_passwd_new = null;
+							m_account_info_name = info_name;
+							m_account_info_email = info_email;
+							m_account_info_email_confirm = null;
+							m_account_info_phone = info_phone;
+						}
+					}
+					catch ( Exception e ) {
+						if ( result != null ) {
+							response += "\r\n";
+							response += "JSON obj {" + "\r\n";
+							response += "  - result = " + result + "\r\n";
+							response += "}" + "\r\n";
+						}
 						
-						Log.d( TAG, "get_http_account_info(): JSON obj {" );
-						Log.d( TAG, "get_http_account_info():   - result = " + result );
-						Log.d( TAG, "get_http_account_info():   - account_info_id = " + info_id );
-						Log.d( TAG, "get_http_account_info():   - account_info_name = " + info_name );
-						Log.d( TAG, "get_http_account_info():   - account_info_email = " + info_email );
-						Log.d( TAG, "get_http_account_info():   - account_info_phone = " + info_phone );
-						Log.d( TAG, "get_http_account_info(): }" );
-						
-						
-						response += "\r\n";
-						response += "JSON obj {" + "\r\n";
-						response += "  - result = " + result + "\r\n";
-						response += "  - account_info_id = " + info_id + "\r\n";
-						response += "  - account_info_name = " + info_name + "\r\n";
-						response += "  - account_info_email = " + info_email + "\r\n";
-						response += "  - account_info_phone = " + info_phone + "\r\n";
-						response += "}" + "\r\n";
-						
-						
-						// account info
-						m_account_info_id = info_id;
-						m_account_info_passwd_cur = null;
-						m_account_info_passwd_new = null;
-						m_account_info_name = info_name;
-						m_account_info_email = info_email;
-						m_account_info_email_confirm = null;
-						m_account_info_phone = info_phone;
+						set_connection_info_init( false, true );
 					}
 				}
 				//*/
@@ -1780,41 +2553,55 @@ public class HttpTestActivity extends Activity {
 //						}
 //					}
 					
-					JSONObject json_obj = new JSONObject( response );
-					if ( json_obj != null ) {
-						String result = json_obj.getString( "result" );
-						String info_id = json_obj.getString( "account_info_id" );
-						String info_name = json_obj.getString( "account_info_name" );
-						String info_email = json_obj.getString( "account_info_email" );
-						String info_phone = json_obj.getString( "account_info_phone" );
+					String result = null;
+					try {
+						JSONObject json_obj = new JSONObject( response );
+						if ( json_obj != null ) {
+							result = json_obj.getString( "result" );
+							
+							String info_id = json_obj.getString( "account_info_id" );
+							String info_name = json_obj.getString( "account_info_name" );
+							String info_email = json_obj.getString( "account_info_email" );
+							String info_phone = json_obj.getString( "account_info_phone" );
+							
+							Log.d( TAG, "set_http_account_info(): JSON obj {" );
+							Log.d( TAG, "set_http_account_info():   - result = " + result );
+							Log.d( TAG, "set_http_account_info():   - account_info_id = " + info_id );
+							Log.d( TAG, "set_http_account_info():   - account_info_name = " + info_name );
+							Log.d( TAG, "set_http_account_info():   - account_info_email = " + info_email );
+							Log.d( TAG, "set_http_account_info():   - account_info_phone = " + info_phone );
+							Log.d( TAG, "set_http_account_info(): }" );
+							
+							
+							response += "\r\n";
+							response += "JSON obj {" + "\r\n";
+							response += "  - result = " + result + "\r\n";
+							response += "  - account_info_id = " + info_id + "\r\n";
+							response += "  - account_info_name = " + info_name + "\r\n";
+							response += "  - account_info_email = " + info_email + "\r\n";
+							response += "  - account_info_phone = " + info_phone + "\r\n";
+							response += "}" + "\r\n";
+							
+							
+							// account info
+							m_account_info_id = info_id;
+							m_account_info_passwd_cur = null;
+							m_account_info_passwd_new = null;
+							m_account_info_name = info_name;
+							m_account_info_email = info_email;
+							m_account_info_email_confirm = null;
+							m_account_info_phone = info_phone;
+						}
+					}
+					catch ( Exception e ) {
+						if ( result != null ) {
+							response += "\r\n";
+							response += "JSON obj {" + "\r\n";
+							response += "  - result = " + result + "\r\n";
+							response += "}" + "\r\n";
+						}
 						
-						Log.d( TAG, "set_http_account_info(): JSON obj {" );
-						Log.d( TAG, "set_http_account_info():   - result = " + result );
-						Log.d( TAG, "set_http_account_info():   - account_info_id = " + info_id );
-						Log.d( TAG, "set_http_account_info():   - account_info_name = " + info_name );
-						Log.d( TAG, "set_http_account_info():   - account_info_email = " + info_email );
-						Log.d( TAG, "set_http_account_info():   - account_info_phone = " + info_phone );
-						Log.d( TAG, "set_http_account_info(): }" );
-						
-						
-						response += "\r\n";
-						response += "JSON obj {" + "\r\n";
-						response += "  - result = " + result + "\r\n";
-						response += "  - account_info_id = " + info_id + "\r\n";
-						response += "  - account_info_name = " + info_name + "\r\n";
-						response += "  - account_info_email = " + info_email + "\r\n";
-						response += "  - account_info_phone = " + info_phone + "\r\n";
-						response += "}" + "\r\n";
-						
-						
-						// account info
-						m_account_info_id = info_id;
-						m_account_info_passwd_cur = null;
-						m_account_info_passwd_new = null;
-						m_account_info_name = info_name;
-						m_account_info_email = info_email;
-						m_account_info_email_confirm = null;
-						m_account_info_phone = info_phone;
+						set_connection_info_init( false, true );
 					}
 				}
 				//*/
@@ -2028,24 +2815,36 @@ public class HttpTestActivity extends Activity {
 //						}
 //					}
 					
-					JSONObject json_obj = new JSONObject( response );
-					if ( json_obj != null ) {
-						String result = json_obj.getString( "result" );
-						
-						Log.d( TAG, "set_http_account_info_remove(): JSON obj {" );
-						Log.d( TAG, "set_http_account_info_remove():   - result = " + result );
-						Log.d( TAG, "set_http_account_info_remove(): }" );
-						
-						
-						response += "\r\n";
-						response += "JSON obj {" + "\r\n";
-						response += "  - result = " + result + "\r\n";
-						response += "}" + "\r\n";
+					String result = null;
+					try {
+						JSONObject json_obj = new JSONObject( response );
+						if ( json_obj != null ) {
+							result = json_obj.getString( "result" );
+							
+							Log.d( TAG, "set_http_account_info_remove(): JSON obj {" );
+							Log.d( TAG, "set_http_account_info_remove():   - result = " + result );
+							Log.d( TAG, "set_http_account_info_remove(): }" );
+							
+							
+							response += "\r\n";
+							response += "JSON obj {" + "\r\n";
+							response += "  - result = " + result + "\r\n";
+							response += "}" + "\r\n";
+						}
+					}
+					catch ( Exception e ) {
+						if ( result != null ) {
+							response += "\r\n";
+							response += "JSON obj {" + "\r\n";
+							response += "  - result = " + result + "\r\n";
+							response += "}" + "\r\n";
+						}
 					}
 				}
 				//*/
 				
 				
+				/*
 				// account info
 				m_account_info_id = null;
 				m_account_info_passwd_cur = null;
@@ -2060,6 +2859,8 @@ public class HttpTestActivity extends Activity {
 				m_userid = null;
 				m_passwd = null;
 				m_cookie = null;
+				*/
+				set_connection_info_init_all();
 				
 				
 				return response;
